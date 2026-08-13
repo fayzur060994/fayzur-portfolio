@@ -78,7 +78,31 @@ function buildCube(size) {
   return { v, edges };
 }
 
+// Build an orbit ring (ellipse in 3D, tilted)
+function buildRing(radius, tiltX, tiltZ) {
+  const pts = [];
+  for (let i = 0; i <= 60; i++) {
+    const a = (i / 60) * Math.PI * 2;
+    let x = radius * Math.cos(a);
+    let y = radius * Math.sin(a) * 0.42;
+    let z = 0;
+    // tilt around X
+    const cx = Math.cos(tiltX), sx = Math.sin(tiltX);
+    let y2 = y * cx - z * sx, z2 = y * sx + z * cx;
+    y = y2; z = z2;
+    // tilt around Z
+    const cz = Math.cos(tiltZ), sz = Math.sin(tiltZ);
+    const x2 = x * cz - y * sz, y3 = x * sz + y * cz;
+    pts.push([x2, y3, z]);
+  }
+  return pts;
+}
+
 const globe = buildSphere(150, 12, 8);
+const rings = [
+  buildRing(225, 0.5, 0.2),
+  buildRing(270, -0.35, 0.6),
+];
 const cubes = [];
 for (let i = 0; i < 5; i++) {
   cubes.push({
@@ -140,12 +164,39 @@ function drawWireframe(ctx, pts, color, alphaBase) {
     ctx.clearRect(0, 0, w, h);
 
     /* ── 3D wireframe globe (right side, CBDC-style) ── */
-    const gx = w * 0.82, gy = h * 0.3;
-    const globeScale = Math.min(w, h) / 1100 + 0.7;
+    const gx = w * 0.8, gy = h * 0.3;
+    const globeScale = Math.min(w, h) / 900 + 0.75;
     const fov = 500;
     const rotY = time * 1.2;
     const rotX = Math.sin(time * 0.6) * 0.25;
 
+    // Soft glow halo behind globe
+    const halo = ctx.createRadialGradient(gx, gy, 0, gx, gy, 260 * globeScale);
+    halo.addColorStop(0, 'rgba(0,166,226,0.16)');
+    halo.addColorStop(0.6, 'rgba(77,101,255,0.07)');
+    halo.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(gx, gy, 260 * globeScale, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Orbit rings (CBDC-style)
+    for (let ri = 0; ri < rings.length; ri++) {
+      const ring = rings[ri];
+      const proj = [];
+      let avgScale = 0;
+      for (const p of ring) {
+        let [x, y, z] = R3D.rotY(p[0], p[1], p[2], rotY * (ri === 0 ? 0.8 : -0.5));
+        [x, y, z] = R3D.rotX(x, y, z, rotX);
+        const [sx, sy, sc] = R3D.project(x * globeScale, y * globeScale, z * globeScale, fov, gx, gy);
+        proj.push([sx, sy]);
+        avgScale += sc;
+      }
+      avgScale /= ring.length;
+      drawWireframe(ctx, proj, ri === 0 ? '#4d65ff' : '#13ce66', 0.22 + avgScale * 0.4);
+    }
+
+    // Globe lines
     for (const line of globe.lines) {
       const proj = [];
       let avgScale = 0;
@@ -159,7 +210,7 @@ function drawWireframe(ctx, pts, color, alphaBase) {
         avgScale += sc;
       }
       avgScale /= line.length;
-      drawWireframe(ctx, proj, '#00a6e2', 0.12 + avgScale * 0.2);
+      drawWireframe(ctx, proj, '#00a6e2', 0.22 + avgScale * 0.42);
     }
 
     // Glow points on globe
@@ -169,9 +220,9 @@ function drawWireframe(ctx, pts, color, alphaBase) {
       const [sx, sy, sc] = R3D.project(x * globeScale, y * globeScale, z * globeScale, fov, gx, gy);
       if (sc > 0.55) {
         ctx.beginPath();
-        ctx.arc(sx, sy, 1.6 * sc, 0, Math.PI * 2);
+        ctx.arc(sx, sy, 2.1 * sc, 0, Math.PI * 2);
         ctx.fillStyle = '#22d3ee';
-        ctx.globalAlpha = 0.5 * sc;
+        ctx.globalAlpha = 0.8 * sc;
         ctx.fill();
       }
     }
@@ -191,14 +242,14 @@ function drawWireframe(ctx, pts, color, alphaBase) {
         pts.push([sx, sy]);
         sumScale += sc;
       }
-      const alpha = 0.08 + (sumScale / 8) * 0.25;
+      const alpha = 0.2 + (sumScale / 8) * 0.45;
       for (const [a, b] of cube.c.edges) {
         ctx.beginPath();
         ctx.moveTo(pts[a][0], pts[a][1]);
         ctx.lineTo(pts[b][0], pts[b][1]);
         ctx.strokeStyle = cube.color;
         ctx.globalAlpha = alpha;
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 1.2;
         ctx.stroke();
       }
     }
