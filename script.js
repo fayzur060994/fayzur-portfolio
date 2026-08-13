@@ -534,3 +534,310 @@ if (chartsSection) {
 document.querySelectorAll('.skills-grid .skill-card, .pf-grid .pf-card').forEach((el, i) => {
   el.style.transitionDelay = (i % 3) * 0.08 + 's';
 });
+
+/* ═══════════════════════════════════════════
+   3D CHARTS — vanilla 3D engine (no libraries)
+   ═══════════════════════════════════════════ */
+
+function shadeHex(hex, amt) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.max(0, Math.min(255, (n >> 16) + amt));
+  const g = Math.max(0, Math.min(255, ((n >> 8) & 0xff) + amt));
+  const b = Math.max(0, Math.min(255, (n & 0xff) + amt));
+  return `rgb(${r},${g},${b})`;
+}
+
+function camProject(p, cam, cx, cy) {
+  let [x, y, z] = R3D.rotY(p[0], p[1], p[2], cam.rotY);
+  [x, y, z] = R3D.rotX(x, y, z, cam.rotX);
+  const sc = cam.fov / (cam.fov + z);
+  return [cx + x * sc, cy + y * sc, sc];
+}
+
+// 3D box: center (cx,cy,cz), w,h,d; returns faces [{pts2D, color}]
+function boxFaces(cx, cy, cz, w, h, d, color, cam, ox, oy) {
+  const x0 = cx - w / 2, x1 = cx + w / 2;
+  const y0 = cy - h, y1 = cy;
+  const z0 = cz - d / 2, z1 = cz + d / 2;
+  const P = [
+    [x0, y0, z0], [x1, y0, z0], [x1, y1, z0], [x0, y1, z0],
+    [x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1],
+  ];
+  const Q = P.map((p) => camProject(p, cam, ox, oy));
+  const faces = [
+    { idx: [0, 1, 2, 3], color: shadeHex(color, -42) },
+    { idx: [4, 5, 6, 7], color: color },
+    { idx: [0, 1, 5, 4], color: shadeHex(color, 42) },
+    { idx: [1, 2, 6, 5], color: shadeHex(color, -18) },
+  ];
+  return faces.map((f) => ({
+    pts: f.idx.map((i) => [Q[i][0], Q[i][1]]),
+    color: f.color,
+    depth: f.idx.reduce((s, i) => s + Q[i][2], 0) / f.idx.length,
+  }));
+}
+
+function fillFaces(ctx, faces) {
+  faces.sort((a, b) => b.depth - a.depth);
+  for (const f of faces) {
+    ctx.beginPath();
+    ctx.moveTo(f.pts[0][0], f.pts[0][1]);
+    for (let i = 1; i < f.pts.length; i++) ctx.lineTo(f.pts[i][0], f.pts[i][1]);
+    ctx.closePath();
+    ctx.fillStyle = f.color;
+    ctx.fill();
+  }
+}
+
+function chartCam() {
+  return { rotY: -0.6, rotX: 0.32, fov: 760 };
+}
+
+const easeOut = (p) => 1 - Math.pow(1 - p, 3);
+
+function init3DCharts() {
+  const charts = [
+    { id: 'chartBars', draw: draw3DBars },
+    { id: 'chartFunnel', draw: draw3DFunnel },
+    { id: 'chartLine', draw: draw3DLine },
+  ];
+  charts.forEach((cfg) => {
+    const cv = document.getElementById(cfg.id);
+    if (!cv) return;
+    const ctx = cv.getContext('2d');
+    let raf = null, t0 = null, visible = false;
+
+    const sizeCanvas = () => {
+      const dpr = window.devicePixelRatio || 1;
+      const w = cv.clientWidth || 300;
+      const h = cv.clientHeight || 230;
+      cv.width = Math.round(w * dpr);
+      cv.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    sizeCanvas();
+    window.addEventListener('resize', sizeCanvas);
+
+    const loop = (ts) => {
+      if (!visible) return;
+      if (t0 === null) t0 = ts;
+      const t = (ts - t0) / 1000;
+      const w = cv.clientWidth || 300;
+      const h = cv.clientHeight || 230;
+      ctx.clearRect(0, 0, w, h);
+      cfg.draw(ctx, w, h, t);
+      raf = requestAnimationFrame(loop);
+    };
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            if (!visible) {
+              visible = true;
+              t0 = performance.now();
+              raf = requestAnimationFrame(loop);
+            }
+          } else {
+            visible = false;
+            if (raf) cancelAnimationFrame(raf);
+          }
+        });
+      },
+      { threshold: 0.25 }
+    );
+    obs.observe(cv);
+  });
+}
+
+/* ── 3D BAR CHART ── */
+function draw3DBars(ctx, w, h, t) {
+  const cam = chartCam();
+  const data = [
+    { v: 0.3, l: 'M1', c: '#2f80ed' },
+    { v: 0.63, l: 'M2', c: '#56ccf2' },
+    { v: 1.05, l: 'M3', c: '#915eff' },
+    { v: 1.44, l: 'M4', c: '#00cea8' },
+    { v: 2.1, l: 'M5', c: '#bf61ff' },
+    { v: 2.37, l: 'M6', c: '#fc6767' },
+  ];
+  const maxV = 2.37;
+  const ox = w / 2, oy = h - 26;
+  const barW = 30, barD = 30, step = 52;
+  const x0 = -((data.length - 1) * step) / 2;
+
+  // ground glow line
+  const gA = camProject([-160, 0, 40], cam, ox, oy);
+  const gB = camProject([160, 0, -40], cam, ox, oy);
+  ctx.beginPath();
+  ctx.moveTo(gA[0], gA[1]);
+  ctx.lineTo(gB[0], gB[1]);
+  ctx.strokeStyle = 'rgba(145,94,255,.35)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  data.forEach((d, i) => {
+    const delay = 0.12 + i * 0.1;
+    const p = easeOut(Math.min(Math.max((t - delay) / 0.75, 0), 1));
+    const hgt = (d.v / maxV) * 135 * p;
+    const cx = x0 + i * step;
+    const faces = boxFaces(cx, 0, 0, barW, hgt, barD, d.c, cam, ox, oy);
+    fillFaces(ctx, faces);
+    // label under bar
+    const lb = camProject([cx, -6, 0], cam, ox, oy);
+    ctx.font = '600 10px Poppins, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#777';
+    ctx.fillText(d.l, lb[0], lb[1] + 14);
+    // value above bar (after grown)
+    if (p > 0.55) {
+      const top = camProject([cx, hgt + 8, 0], cam, ox, oy);
+      ctx.font = '700 11px Poppins, sans-serif';
+      ctx.fillStyle = i === data.length - 1 ? '#fc6767' : '#aaa6c3';
+      ctx.fillText(i === data.length - 1 ? d.v + 'Cr' : d.v.toFixed(1), top[0], top[1] - 6);
+    }
+  });
+}
+
+/* ── 3D FUNNEL ── */
+function draw3DFunnel(ctx, w, h, t) {
+  const cam = chartCam();
+  const levels = [
+    { wd: 240, label: '1,274 raw', pct: '57%', c: '#2f80ed' },
+    { wd: 190, label: '721 unique', pct: '12%', c: '#915eff' },
+    { wd: 140, label: '87 analysed', pct: '36%', c: '#00cea8' },
+    { wd: 92, label: '31 leads · 12 biddable', pct: '39%', c: '#fc6767' },
+  ];
+  const ox = w / 2, oy = h - 20;
+  const lh = 38, gap = 4;
+  let cy = 0;
+
+  // draw from bottom level up
+  for (let i = levels.length - 1; i >= 0; i--) {
+    const lv = levels[i];
+    const delay = 0.25 + (levels.length - 1 - i) * 0.18;
+    const p = easeOut(Math.min(Math.max((t - delay) / 0.5, 0), 1));
+    const drop = (1 - p) * -26;
+    const cyb = cy + lh;
+    const d = lv.wd * 0.42;
+    const faces = boxFaces(0, cyb + drop, 0, lv.wd, lh, d, lv.c, cam, ox, oy);
+    fillFaces(ctx, faces);
+    // label on front face
+    if (p > 0.5) {
+      const lp = camProject([0, cyb - lh / 2 + drop, d / 2 + 1], cam, ox, oy);
+      ctx.font = '700 10px Poppins, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#fff';
+      ctx.fillText(lv.label, lp[0], lp[1] + 3);
+      // pct on right
+      const pp = camProject([lv.wd / 2 + 26, cyb - lh / 2 + drop, 0], cam, ox, oy);
+      ctx.font = '600 9px Poppins, sans-serif';
+      ctx.fillStyle = '#aaa6c3';
+      ctx.fillText(lv.pct, pp[0], pp[1] + 3);
+    }
+    cy += lh + gap;
+  }
+}
+
+/* ── 3D LINE CHART ── */
+function draw3DLine(ctx, w, h, t) {
+  const cam = chartCam();
+  const pts = [165, 130, 108, 85, 55];
+  const ox = w / 2, oy = h - 24;
+  const minV = 55, maxV = 165;
+  const worldPts = pts.map((v, i) => [
+    -132 + i * 66,
+    ((v - minV) / (maxV - minV)) * 132,
+    0,
+  ]);
+
+  // floor grid
+  for (let gx = -132; gx <= 132; gx += 66) {
+    const a = camProject([gx, 0, -36], cam, ox, oy);
+    const b = camProject([gx, 0, 36], cam, ox, oy);
+    ctx.beginPath();
+    ctx.moveTo(a[0], a[1]);
+    ctx.lineTo(b[0], b[1]);
+    ctx.strokeStyle = 'rgba(255,255,255,.06)';
+    ctx.stroke();
+  }
+  const fA = camProject([-132, 0, 0], cam, ox, oy);
+  const fB = camProject([132, 0, 0], cam, ox, oy);
+  ctx.beginPath();
+  ctx.moveTo(fA[0], fA[1]);
+  ctx.lineTo(fB[0], fB[1]);
+  ctx.strokeStyle = 'rgba(145,94,255,.3)';
+  ctx.stroke();
+
+  const p = easeOut(Math.min(t / 1.7, 1));
+  const segs = worldPts.length - 1;
+  const drawn = p * segs;
+
+  // draw line progressively
+  ctx.save();
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  for (let i = 0; i < segs; i++) {
+    const segP = Math.min(Math.max(drawn - i, 0), 1);
+    if (segP <= 0) break;
+    const a = camProject(worldPts[i], cam, ox, oy);
+    const b = camProject(worldPts[i + 1], cam, ox, oy);
+    const mx = a[0] + (b[0] - a[0]) * segP;
+    const my = a[1] + (b[1] - a[1]) * segP;
+    ctx.beginPath();
+    ctx.moveTo(a[0], a[1]);
+    ctx.lineTo(mx, my);
+    ctx.strokeStyle = '#56ccf2';
+    ctx.lineWidth = 4;
+    ctx.shadowColor = 'rgba(86,204,242,.8)';
+    ctx.shadowBlur = 10;
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // dots + labels
+  worldPts.forEach((wp, i) => {
+    const dotP = Math.min(Math.max((drawn - i + 0.4) / 0.6, 0), 1);
+    if (dotP <= 0) return;
+    const dp = camProject(wp, cam, ox, oy);
+    const r = 6 * dotP;
+    const grad = ctx.createRadialGradient(dp[0], dp[1], 0, dp[0], dp[1], r * 2.6);
+    const col = i === 0 ? '#fc6767' : i === worldPts.length - 1 ? '#00cea8' : '#915eff';
+    grad.addColorStop(0, '#fff');
+    grad.addColorStop(0.35, col);
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.beginPath();
+    ctx.arc(dp[0], dp[1], r * 2.6, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+    // labels
+    if (i === 0) {
+      ctx.font = '700 10px Poppins, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#fc6767';
+      ctx.fillText('165min', dp[0] + 10, dp[1] - 8);
+      ctx.font = '600 9px Poppins, sans-serif';
+      ctx.fillStyle = '#777';
+      ctx.fillText('Day 1', dp[0] + 10, dp[1] + 16);
+    } else if (i === worldPts.length - 1) {
+      ctx.font = '700 10px Poppins, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#00cea8';
+      ctx.fillText('55min', dp[0] - 10, dp[1] - 8);
+      ctx.font = '600 9px Poppins, sans-serif';
+      ctx.fillStyle = '#777';
+      ctx.fillText('Day 5', dp[0] - 10, dp[1] + 16);
+    }
+  });
+
+  // big result label
+  if (p > 0.85) {
+    const lp = camProject([0, 40, 60], cam, ox, oy);
+    ctx.font = '800 14px Poppins, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#bf61ff';
+    ctx.fillText('−67% in 5 days', lp[0], lp[1]);
+  }
+}
+
+init3DCharts();
