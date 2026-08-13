@@ -322,6 +322,15 @@ a { color: inherit; text-decoration: none; }
 .chart-title { font-size: .95rem; font-weight: 600; margin-bottom: 14px; }
 .chart { width: 100%; height: auto; }
 .chart-note { color: var(--muted); font-size: .8rem; margin-top: 10px; }
+
+/* ── 3D CHART CANVAS ── */
+.chart3d {
+  display: block;
+  width: 100%;
+  height: 230px;
+  border-radius: 10px;
+  background: radial-gradient(ellipse at 50% 100%, rgba(145,94,255,.07), transparent 70%);
+}
 .bar, .funnel, .line { opacity: .92; }
 
 /* ── CHART ANIMATIONS (triggered on scroll into view) ── */
