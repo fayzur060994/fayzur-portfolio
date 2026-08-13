@@ -324,6 +324,97 @@ a { color: inherit; text-decoration: none; }
 .chart-note { color: var(--muted); font-size: .8rem; margin-top: 10px; }
 .bar, .funnel, .line { opacity: .92; }
 
+/* ── CHART ANIMATIONS (triggered on scroll into view) ── */
+.chart { transform-box: fill-box; }
+
+/* Bar chart: grow from bottom, staggered */
+.chart .bar {
+  transform-origin: bottom;
+  transform: scaleY(0);
+  transition: transform .7s cubic-bezier(.22, 1, .36, 1);
+}
+.charts-anim .bar { transform: scaleY(1); }
+.charts-anim .bar:nth-of-type(1) { transition-delay: .05s; }
+.charts-anim .bar:nth-of-type(2) { transition-delay: .12s; }
+.charts-anim .bar:nth-of-type(3) { transition-delay: .19s; }
+.charts-anim .bar:nth-of-type(4) { transition-delay: .26s; }
+.charts-anim .bar:nth-of-type(5) { transition-delay: .33s; }
+.charts-anim .bar:nth-of-type(6) { transition-delay: .4s; }
+
+/* Funnel: sequential drop-in */
+.chart .funnel {
+  opacity: 0;
+  transform: translateY(10px) scale(.94);
+  transition: opacity .5s ease, transform .5s ease;
+}
+.chart .funnel + text {
+  opacity: 0;
+  transition: opacity .4s ease;
+}
+.charts-anim .funnel { opacity: 1; transform: none; }
+.charts-anim .funnel + text { opacity: 1; }
+.charts-anim .funnel:nth-of-type(1) { transition-delay: .1s; }
+.charts-anim .funnel:nth-of-type(1) + text { transition-delay: .25s; }
+.charts-anim .funnel:nth-of-type(2) { transition-delay: .3s; }
+.charts-anim .funnel:nth-of-type(2) + text { transition-delay: .45s; }
+.charts-anim .funnel:nth-of-type(3) { transition-delay: .5s; }
+.charts-anim .funnel:nth-of-type(3) + text { transition-delay: .65s; }
+.charts-anim .funnel:nth-of-type(4) { transition-delay: .7s; }
+.charts-anim .funnel:nth-of-type(4) + text { transition-delay: .85s; }
+
+/* Line chart: draw itself (stroke-dashoffset) */
+.chart .line {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1.5s cubic-bezier(.4, 0, .2, 1) .15s;
+}
+.charts-anim .line { stroke-dashoffset: 0; }
+
+/* Dots: pop in after line draws, then pulse */
+.chart .dot {
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity .3s ease, transform .3s ease;
+}
+.charts-anim .dot { opacity: 1; transform: scale(1); }
+.charts-anim .dot:nth-of-type(1) { transition-delay: 1.3s; }
+.charts-anim .dot:nth-of-type(2) { transition-delay: 1.5s; }
+.chart .dot {
+  transform-origin: center;
+}
+@keyframes dotPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+}
+.charts-anim .dot {
+  animation: dotPulse 1.6s ease-in-out 1.8s infinite;
+}
+.charts-anim .dot:nth-of-type(2) { animation-delay: 2s; }
+
+/* Highlight label for the -67% line */
+.chart .big-label {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .5s ease 1.6s, transform .5s ease 1.6s;
+}
+.charts-anim .big-label { opacity: 1; transform: none; }
+
+/* ── CHART INSIGHT STRIPS (info under each chart) ── */
+.chart-insight {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 12px; padding: 9px 12px;
+  background: rgba(145,94,255,.08);
+  border: 1px solid rgba(145,94,255,.25);
+  border-radius: 10px;
+  font-size: .78rem; color: var(--text);
+  opacity: 0; transform: translateY(6px);
+  transition: opacity .5s ease 1.5s, transform .5s ease 1.5s;
+}
+.chart-insight:nth-of-type(2) { transition-delay: 1.7s; }
+.chart-insight:nth-of-type(3) { transition-delay: 1.9s; }
+.charts-anim .chart-insight { opacity: 1; transform: none; }
+.insight-ico { color: var(--green); font-weight: 700; }
+
 /* ── REPO / ORGANIZATION ── */
 .repo-card {
   background: var(--panel);
