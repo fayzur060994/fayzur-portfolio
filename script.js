@@ -703,8 +703,8 @@ function draw3DBars(ctx, w, h, t) {
 function draw3DFunnel(ctx, w, h, t) {
   const cam = chartCam();
   const levels = [
-    { wd: 240, label: '1,274 raw', pct: '57%', c: '#2f80ed' },
-    { wd: 190, label: '721 unique', pct: '12%', c: '#915eff' },
+    { wd: 240, label: '3,589 raw', pct: '66%', c: '#2f80ed' },
+    { wd: 190, label: '2,386 unique', pct: '3.6%', c: '#915eff' },
     { wd: 140, label: '87 analysed', pct: '36%', c: '#00cea8' },
     { wd: 92, label: '31 leads · 12 biddable', pct: '39%', c: '#fc6767' },
   ];
