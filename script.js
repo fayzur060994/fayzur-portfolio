@@ -138,7 +138,7 @@ function drawWireframe(ctx, pts, color, alphaBase) {
   let w, h, particles = [];
   const COUNT = 60;
   const LINK_DIST = 130;
-  const COLORS = ['#00a6e2', '#4d65ff', '#13ce66', '#ff659d', '#9b0984'];
+  const COLORS = ['#915eff', '#00cea8', '#56ccf2', '#fc6767', '#bf61ff'];
   let time = 0;
 
   // Mouse parallax targets (used by globe + cubes)
@@ -183,8 +183,8 @@ function drawWireframe(ctx, pts, color, alphaBase) {
 
     // Soft glow halo behind globe
     const halo = ctx.createRadialGradient(gx, gy, 0, gx, gy, 260 * globeScale);
-    halo.addColorStop(0, 'rgba(0,166,226,0.16)');
-    halo.addColorStop(0.6, 'rgba(77,101,255,0.07)');
+    halo.addColorStop(0, 'rgba(145,94,255,0.20)');
+    halo.addColorStop(0.6, 'rgba(86,204,242,0.08)');
     halo.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = halo;
     ctx.beginPath();
@@ -204,7 +204,7 @@ function drawWireframe(ctx, pts, color, alphaBase) {
         avgScale += sc;
       }
       avgScale /= ring.length;
-      drawWireframe(ctx, proj, ri === 0 ? '#4d65ff' : '#13ce66', 0.22 + avgScale * 0.4);
+      drawWireframe(ctx, proj, ri === 0 ? '#915eff' : '#00cea8', 0.22 + avgScale * 0.4);
     }
 
     // Globe lines
@@ -221,7 +221,7 @@ function drawWireframe(ctx, pts, color, alphaBase) {
         avgScale += sc;
       }
       avgScale /= line.length;
-      drawWireframe(ctx, proj, '#00a6e2', 0.22 + avgScale * 0.42);
+      drawWireframe(ctx, proj, '#56ccf2', 0.22 + avgScale * 0.42);
     }
 
     // Glow points on globe
@@ -232,7 +232,7 @@ function drawWireframe(ctx, pts, color, alphaBase) {
       if (sc > 0.55) {
         ctx.beginPath();
         ctx.arc(sx, sy, 2.1 * sc, 0, Math.PI * 2);
-        ctx.fillStyle = '#22d3ee';
+        ctx.fillStyle = '#00cea8';
         ctx.globalAlpha = 0.8 * sc;
         ctx.fill();
       }
