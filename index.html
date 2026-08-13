@@ -14,6 +14,7 @@
 </head>
 <body>
 
+<div id="scrollProgress" aria-hidden="true"></div>
 <canvas id="particles" aria-hidden="true"></canvas>
 
 <!-- ══════════════ NAV ══════════════ -->
@@ -97,10 +98,10 @@
       <p class="section-sub">Results-driven professional with 11+ years across UK property sourcing, retail management and B2B development. Seeking Property Consultant role in Dubai — RERA-ready mindset, proven high-ticket closing ability.</p>
     </div>
     <div class="stats-grid">
-      <div class="stat-card"><div class="stat-num grad-blue">11+</div><div class="stat-label">Years Experience</div></div>
-      <div class="stat-card"><div class="stat-num grad-green">2.37Cr</div><div class="stat-label">Furniture Sales (BDT)</div></div>
-      <div class="stat-card"><div class="stat-num grad-pink">12.78Cr</div><div class="stat-label">Electronics Sales (BDT)</div></div>
-      <div class="stat-card"><div class="stat-num grad-purple">1,274</div><div class="stat-label">Properties Screened</div></div>
+      <div class="stat-card"><div class="stat-num grad-blue" data-count="11" data-suffix="+">0</div><div class="stat-label">Years Experience</div></div>
+      <div class="stat-card"><div class="stat-num grad-green" data-count="2.37" data-suffix="Cr">0</div><div class="stat-label">Furniture Sales (BDT)</div></div>
+      <div class="stat-card"><div class="stat-num grad-pink" data-count="12.78" data-suffix="Cr">0</div><div class="stat-label">Electronics Sales (BDT)</div></div>
+      <div class="stat-card"><div class="stat-num grad-purple" data-count="1274" data-format="comma">0</div><div class="stat-label">Properties Screened</div></div>
     </div>
   </div>
 </section>
@@ -235,6 +236,7 @@
         <div class="pf-body">
           <h3>Liverpool BRRR — Real DUV</h3>
           <p>DUV from actual sold comps + evidence sheet. 50% bridge / 50% cash financing model.</p>
+          <div class="pf-chips"><span class="pf-chip">1,274 screened</span><span class="pf-chip">12 biddable</span></div>
           <span class="pf-link">View repo →</span>
         </div>
       </a>
@@ -243,6 +245,7 @@
         <div class="pf-body">
           <h3>Liverpool All-L-Postcode Screen</h3>
           <p>Every L postcode BRRR-screened. Standard sale + crime-rate cross-reference.</p>
+          <div class="pf-chips"><span class="pf-chip">20 postcodes</span><span class="pf-chip">Crime cross-ref</span></div>
           <span class="pf-link">View repo →</span>
         </div>
       </a>
@@ -251,6 +254,7 @@
         <div class="pf-body">
           <h3>London E1 Standard Sale BRRR</h3>
           <p>53 properties area-wise, 40-min commute band, crime-rate summary.</p>
+          <div class="pf-chips"><span class="pf-chip">53 properties</span><span class="pf-chip">40-min band</span></div>
           <span class="pf-link">View repo →</span>
         </div>
       </a>
@@ -259,6 +263,7 @@
         <div class="pf-body">
           <h3>Grays Property Comparison</h3>
           <p>Freehold houses, max-offer math, sold comparables, station distance analysis.</p>
+          <div class="pf-chips"><span class="pf-chip">10 properties</span><span class="pf-chip">Max-offer math</span></div>
           <span class="pf-link">View repo →</span>
         </div>
       </a>
@@ -267,6 +272,7 @@
         <div class="pf-body">
           <h3>Manningham Road L4 — BRRR</h3>
           <p>Full single-property analysis: scenarios, document archive, sold comps, bid recommendation.</p>
+          <div class="pf-chips"><span class="pf-chip">3 scenarios</span><span class="pf-chip">Bid rec</span></div>
           <span class="pf-link">View repo →</span>
         </div>
       </a>
@@ -275,6 +281,7 @@
         <div class="pf-body">
           <h3>UK Legal Analysis — Argent &amp; Parsonage</h3>
           <p>Two-property legal review: EWS1, lease extension, lawyer references, risk flags.</p>
+          <div class="pf-chips"><span class="pf-chip">EWS1 deep-dive</span><span class="pf-chip">Risk flags</span></div>
           <span class="pf-link">View repo →</span>
         </div>
       </a>
@@ -283,6 +290,7 @@
         <div class="pf-body">
           <h3>Prompt Library</h3>
           <p>Reusable prompts: property research, content production, agent ops, admin workflow.</p>
+          <div class="pf-chips"><span class="pf-chip">4 categories</span><span class="pf-chip">20+ prompts</span></div>
           <span class="pf-link">View repo →</span>
         </div>
       </a>
@@ -397,6 +405,8 @@
     <p class="foot-tech">Static site · no tracking · BSc Computer Science &amp; Engineering</p>
   </div>
 </footer>
+
+<button class="back-top" id="backTop" aria-label="Back to top">↑</button>
 
 <script src="script.js"></script>
 </body>

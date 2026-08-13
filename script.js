@@ -141,6 +141,13 @@ function drawWireframe(ctx, pts, color, alphaBase) {
   const COLORS = ['#00a6e2', '#4d65ff', '#13ce66', '#ff659d', '#9b0984'];
   let time = 0;
 
+  // Mouse parallax targets (used by globe + cubes)
+  let mouseNX = 0, mouseNY = 0, mouseTX = 0, mouseTY = 0;
+  window.addEventListener('mousemove', (e) => {
+    mouseTX = (e.clientX / window.innerWidth) * 2 - 1;
+    mouseTY = (e.clientY / window.innerHeight) * 2 - 1;
+  });
+
   function resize() {
     w = canvas.width = window.innerWidth;
     h = canvas.height = window.innerHeight;
@@ -161,10 +168,14 @@ function drawWireframe(ctx, pts, color, alphaBase) {
 
   function tick() {
     time += 0.005;
+    // Smooth mouse follow (eased)
+    mouseNX += (mouseTX - mouseNX) * 0.03;
+    mouseNY += (mouseTY - mouseNY) * 0.03;
     ctx.clearRect(0, 0, w, h);
 
     /* ── 3D wireframe globe (right side, CBDC-style) ── */
-    const gx = w * 0.8, gy = h * 0.3;
+    const gx = w * 0.8 + mouseNX * 36;
+    const gy = h * 0.3 + mouseNY * 24;
     const globeScale = Math.min(w, h) / 900 + 0.75;
     const fov = 500;
     const rotY = time * 1.2;
@@ -418,8 +429,91 @@ revealEls.forEach((el) => {
   observer.observe(el);
 });
 
-/* ── Nav background on scroll ── */
+/* ── SCROLL PROGRESS BAR ── */
+const progressBar = document.getElementById('scrollProgress');
+window.addEventListener('scroll', () => {
+  const total = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = total > 0 ? (window.scrollY / total) * 100 : 0;
+  progressBar.style.width = pct + '%';
+}, { passive: true });
+
+/* ── BACK TO TOP + NAV SHADOW ── */
+const backTop = document.getElementById('backTop');
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
+  backTop.classList.toggle('show', window.scrollY > 480);
   nav.style.boxShadow = window.scrollY > 20 ? '0 6px 30px rgba(0,0,0,.4)' : 'none';
+}, { passive: true });
+backTop.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* ── SCROLL SPY (active nav) ── */
+const spySections = document.querySelectorAll('section[id], header[id]');
+const spyLinks = document.querySelectorAll('.nav-links a');
+const spyObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        spyLinks.forEach((l) =>
+          l.classList.toggle('active', l.getAttribute('href') === '#' + entry.target.id)
+        );
+      }
+    });
+  },
+  { rootMargin: '-40% 0px -55% 0px' }
+);
+spySections.forEach((s) => spyObserver.observe(s));
+
+/* ── COUNT-UP STATS ── */
+function animateCount(el) {
+  const target = parseFloat(el.dataset.count);
+  const suffix = el.dataset.suffix || '';
+  const isComma = el.dataset.format === 'comma';
+  const decimals = String(el.dataset.count).includes('.') ? String(el.dataset.count).split('.')[1].length : 0;
+  const dur = 1400;
+  const start = performance.now();
+  function frame(now) {
+    const p = Math.min((now - start) / dur, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    const val = target * eased;
+    let text;
+    if (isComma) text = Math.round(val).toLocaleString('en-US');
+    else text = decimals ? val.toFixed(decimals) : Math.round(val).toString();
+    el.textContent = text + suffix;
+    if (p < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+const countObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        animateCount(entry.target);
+        countObserver.unobserve(entry.target);
+      }
+    });
+  },
+  { threshold: 0.5 }
+);
+document.querySelectorAll('[data-count]').forEach((el) => countObserver.observe(el));
+
+/* ── HERO CARD 3D TILT ── */
+const tiltWrap = document.querySelector('.hero-card-wrap');
+if (tiltWrap) {
+  const tiltCard = tiltWrap.querySelector('.hero-card');
+  tiltWrap.addEventListener('mousemove', (e) => {
+    const r = tiltWrap.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    tiltCard.style.transform = `rotateY(${px * 14}deg) rotateX(${-py * 12}deg) translateZ(8px)`;
+  });
+  tiltWrap.addEventListener('mouseleave', () => {
+    tiltCard.style.transform = 'rotateY(0deg) rotateX(0deg) translateZ(0)';
+  });
+}
+
+/* ── STAGGER REVEAL ── */
+document.querySelectorAll('.skills-grid .skill-card, .pf-grid .pf-card').forEach((el, i) => {
+  el.style.transitionDelay = (i % 3) * 0.08 + 's';
 });
