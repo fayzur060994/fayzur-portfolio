@@ -728,6 +728,7 @@ function draw3DFunnel(ctx, w, h, t) {
     { wd: 190, label: '2,386 unique', pct: '3.6%', c: '#915eff' },
     { wd: 140, label: '87 analysed', pct: '36%', c: '#00cea8' },
     { wd: 92, label: '31 leads · 12 biddable', pct: '39%', c: '#fc6767' },
+    { wd: 62, label: '2 deals ✓', pct: '17%', c: '#ffd700' },
   ];
   const ox = w / 2, oy = h - 20;
   const lh = 38, gap = 4;
