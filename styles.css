@@ -97,10 +97,10 @@ a { color: inherit; text-decoration: none; }
 
 .hero-inner { display: grid; grid-template-columns: 1.25fr .75fr; gap: 48px; align-items: center; }
 .hero-badge {
-  display: inline-flex; align-items: center; gap: 8px;
+  display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap;
   border: 1px solid rgba(19,206,102,.4); color: var(--green);
   padding: 6px 14px; border-radius: 100px; font-size: .82rem; font-weight: 700;
-  background: rgba(19,206,102,.08); margin-bottom: 22px;
+  background: rgba(19,206,102,.08); margin-bottom: 22px; line-height: 1.35;
 }
 .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 1.6s infinite; }
 @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1);} 50% { opacity: .4; transform: scale(.75);} }
@@ -316,6 +316,9 @@ a { color: inherit; text-decoration: none; }
   .stats-grid, .contact-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 620px) {
+  .hero { padding: 120px 0 36px; }
+  .hero-title { letter-spacing: -1px; }
+  .hero-typing { min-height: 2.6em; }
   .nav-toggle { display: flex; }
   .nav-links {
     position: fixed; top: 60px; right: 0; left: 0; flex-direction: column;
