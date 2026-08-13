@@ -513,6 +513,23 @@ if (tiltWrap) {
   });
 }
 
+/* ── CHART ANIMATIONS TRIGGER ── */
+const chartsSection = document.getElementById('charts');
+if (chartsSection) {
+  const chartObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          chartsSection.classList.add('charts-anim');
+          chartObserver.unobserve(chartsSection);
+        }
+      });
+    },
+    { threshold: 0.3 }
+  );
+  chartObserver.observe(chartsSection);
+}
+
 /* ── STAGGER REVEAL ── */
 document.querySelectorAll('.skills-grid .skill-card, .pf-grid .pf-card').forEach((el, i) => {
   el.style.transitionDelay = (i % 3) * 0.08 + 's';
