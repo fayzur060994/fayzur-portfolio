@@ -3,50 +3,37 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Fayzur Rahman — Property × AI × Research × Sales</title>
-<meta name="description" content="Fayzur Rahman — Property investment research, AI automation, data analysis and commercial sales. 3,589 UK properties screened, BDT 12.78Cr electronics + 2.37Cr furniture sales, BRRR &amp; BMV strategy." />
+<title>Fayzur Rahman — Property, AI, Research &amp; Sales</title>
+<meta name="description" content="Fayzur Rahman — sourcing, research and analysis for property investors, with AI-assisted workflow automation. 3,589+ UK properties screened, BDT 15Cr+ sales track record." />
 <meta name="author" content="Fayzur Rahman" />
-<meta property="og:title" content="Fayzur Rahman — Property × AI × Research × Sales" />
-<meta property="og:description" content="I turn property data into investment decisions. UK property research, BRRR/BMV analysis, AI automation and commercial sales." />
+<meta property="og:title" content="Fayzur Rahman — Property, AI, Research & Sales" />
+<meta property="og:description" content="I turn property data into better decisions. Sourcing, research and analysis for property investors — with AI-assisted workflow automation." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://fayzur060994.github.io/fayzur-portfolio/" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Fayzur Rahman — Property × AI × Research × Sales" />
-<meta name="twitter:description" content="I turn property data into investment decisions." />
+<meta name="twitter:title" content="Fayzur Rahman — Property, AI, Research & Sales" />
+<meta name="twitter:description" content="I turn property data into better decisions." />
 <link rel="canonical" href="https://fayzur060994.github.io/fayzur-portfolio/" />
 <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<!-- ══════════════ LOADER ══════════════ -->
-<div class="loader" id="loader" aria-hidden="true">
-  <div class="loader-inner">
-    <div class="loader-logo">FAYZUR<span class="logo-dot">.</span></div>
-    <div class="loader-sub">DIGITAL COMMAND CENTER</div>
-    <div class="loader-bar"><span id="loaderBar"></span></div>
-    <div class="loader-status">INITIALISING…</div>
-  </div>
-</div>
-
 <div id="scrollProgress" aria-hidden="true"></div>
-<canvas id="particles" aria-hidden="true"></canvas>
-<div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
-<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+<canvas id="cityGrid" aria-hidden="true"></canvas>
 
 <!-- ══════════════ NAV ══════════════ -->
 <nav class="nav" id="nav">
   <div class="nav-inner">
-    <a href="#world" class="logo">FAYZUR<span class="logo-dot">.</span></a>
+    <a href="#hero" class="logo">FAYZUR<span class="logo-dot">.</span></a>
     <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
     <ul class="nav-links" id="navLinks">
-      <li><a href="#world">World</a></li>
+      <li><a href="#work">Work</a></li>
       <li><a href="#property">Property</a></li>
       <li><a href="#ai">AI</a></li>
-      <li><a href="#data">Data</a></li>
       <li><a href="#career">Career</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#contact" class="nav-cta">Contact</a></li>
@@ -54,591 +41,376 @@
   </div>
 </nav>
 
-<!-- ══════════════ HERO / WORLD ══════════════ -->
-<header class="hero" id="world">
-  <div class="hero-bg" aria-hidden="true">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-    <div class="grid-lines"></div>
-    <div class="vignette"></div>
-  </div>
+<!-- ══════════════ 01 · HERO ══════════════ -->
+<header class="hero" id="hero">
   <div class="container hero-inner">
     <div class="hero-text">
-      <div class="hero-badge"><span class="pulse-dot"></span> PROPERTY&nbsp;×&nbsp;AI&nbsp;×&nbsp;RESEARCH&nbsp;×&nbsp;SALES</div>
-      <h1 class="hero-title">I turn <span class="grad-text">property data</span> into investment decisions.</h1>
-      <p class="hero-sub">Property research, investment analysis, AI automation and commercial sales — built into one analytical approach.</p>
+      <div class="eyebrow"><span class="pulse-dot"></span> PROPERTY · AI · RESEARCH · SALES</div>
+      <h1 class="hero-title">I turn property data into <span class="accent">better decisions.</span></h1>
+      <p class="hero-sub">Sourcing, research and analysis for property investors — with AI-assisted workflow automation behind the scenes.</p>
       <div class="hero-cta">
-        <a href="#command" class="btn btn-primary magnetic">ENTER COMMAND CENTER <span class="btn-arrow">→</span></a>
-        <a href="#career" class="btn btn-ghost">VIEW MY EXPERIENCE</a>
+        <a href="#work" class="btn btn-primary magnetic">Explore my work <span class="btn-arrow">→</span></a>
+        <a href="#contact" class="btn btn-ghost">Let's talk</a>
       </div>
-      <div class="hero-strip" id="heroStrip">
-        <span><b data-stat="screened">0</b> properties screened</span>
-        <span class="strip-sep"></span>
-        <span><b data-stat="postcodes">0</b> unique postcodes</span>
-        <span class="strip-sep"></span>
-        <span><b data-stat="targets">0</b> target properties</span>
-        <span class="strip-sep"></span>
-        <span><b data-stat="auction">0</b> auction lots</span>
+      <div class="hero-stats">
+        <div class="hs-item"><b data-stat="screened">0</b><span>properties screened</span></div>
+        <div class="hs-item"><b data-stat="postcodes">0</b><span>unique postcodes</span></div>
+        <div class="hs-item"><b data-stat="auction">0</b><span>auction lots</span></div>
+      </div>
+    </div>
+    <!-- Portrait / Property Intelligence visual.
+         Portrait slot: replace the .monogram with <img src="assets/portrait.jpg" alt="Fayzur Rahman"> when a photo is provided. -->
+    <div class="hero-visual" aria-hidden="true">
+      <div class="portrait">
+        <div class="portrait-frame">
+          <span class="monogram">FR</span>
+          <span class="pf-chip pf-1">3,589+</span>
+          <span class="pf-chip pf-2">L4 · E1 · RM17</span>
+          <span class="pf-chip pf-3">BRRR · BMV</span>
+        </div>
+      </div>
+      <div class="visual-caption">
+        <span class="vc-dot"></span> PROPERTY INTELLIGENCE — LIVE
       </div>
     </div>
   </div>
-  <div class="scroll-hint" aria-hidden="true">
-    <span class="scroll-mouse"><span class="scroll-wheel"></span></span>
-    <span class="scroll-text">SCROLL TO EXPLORE</span>
-  </div>
-  <div class="marquee" aria-hidden="true">
-    <div class="marquee-track">
-      <span>UK PROPERTY SOURCING</span><i>◆</i><span>BRRR STRATEGY</span><i>◆</i><span>BMV DEAL ANALYSIS</span><i>◆</i><span>AUCTION DUE DILIGENCE</span><i>◆</i><span>AI-AUGMENTED RESEARCH</span><i>◆</i><span>HIGH-TICKET SALES</span><i>◆</i>
-      <span>UK PROPERTY SOURCING</span><i>◆</i><span>BRRR STRATEGY</span><i>◆</i><span>BMV DEAL ANALYSIS</span><i>◆</i><span>AUCTION DUE DILIGENCE</span><i>◆</i><span>AI-AUGMENTED RESEARCH</span><i>◆</i><span>HIGH-TICKET SALES</span><i>◆</i>
-    </div>
-  </div>
+  <div class="scroll-hint" aria-hidden="true"><span class="scroll-line"></span> SCROLL</div>
 </header>
 
-<!-- ══════════════ COMMAND CENTER ══════════════ -->
-<section class="section" id="command">
+<!-- ══════════════ 02 · WHAT I DO ══════════════ -->
+<section class="section" id="work">
   <div class="container">
-    <div class="section-head">
-      <div class="section-tag">// COMMAND CENTER</div>
-      <h2 class="section-title">Digital <span class="grad-text">command center</span></h2>
-      <p class="section-sub">Five labs, one core. Pick a module to enter.</p>
+    <div class="sec-head">
+      <div class="sec-num">02</div>
+      <div>
+        <div class="sec-tag">WHAT I DO</div>
+        <h2 class="sec-title">Three capabilities, <span class="accent">one workflow.</span></h2>
+      </div>
     </div>
-    <div class="cmd-grid">
-      <div class="cmd-side">
-        <button class="cmd-module mod-ai" data-target="#ai">
-          <span class="cmd-ico">◈</span>
-          <span class="cmd-name">AI LAB</span>
-          <span class="cmd-desc">Automation · agents · LLMs</span>
-        </button>
-        <button class="cmd-module mod-prop" data-target="#property">
-          <span class="cmd-ico">⌂</span>
-          <span class="cmd-name">PROPERTY LAB</span>
-          <span class="cmd-desc">BRRR · BMV · auction research</span>
-        </button>
-        <button class="cmd-module mod-data" data-target="#data">
-          <span class="cmd-ico">◫</span>
-          <span class="cmd-name">DATA LAB</span>
-          <span class="cmd-desc">PropertyData · analytics · Excel</span>
-        </button>
-      </div>
-      <div class="cmd-core" tabindex="0" role="img" aria-label="Fayzur Command Core — central node">
-        <div class="core-orbit core-o1"></div>
-        <div class="core-orbit core-o2"></div>
-        <div class="core-orb"></div>
-        <div class="core-label">CORE</div>
-      </div>
-      <div class="cmd-side">
-        <button class="cmd-module mod-career" data-target="#career">
-          <span class="cmd-ico">◔</span>
-          <span class="cmd-name">CAREER</span>
-          <span class="cmd-desc">Timeline · achievements</span>
-        </button>
-        <button class="cmd-module mod-about" data-target="#about">
-          <span class="cmd-ico">◉</span>
-          <span class="cmd-name">ABOUT</span>
-          <span class="cmd-desc">Profile · story · skills</span>
-        </button>
-        <button class="cmd-module mod-data" data-target="#data">
-          <span class="cmd-ico">▤</span>
-          <span class="cmd-name">PROJECTS</span>
-          <span class="cmd-desc">Case studies · repo archive</span>
-        </button>
-      </div>
+    <div class="cap-grid">
+      <article class="cap-card">
+        <div class="cap-ico">◧</div>
+        <h3>Property Research</h3>
+        <p>Sourcing, screening and analysis for BRRR, BMV and auction deals — from postcode screen to legal pack review.</p>
+        <div class="cap-links"><a href="#property">See the work →</a></div>
+      </article>
+      <article class="cap-card">
+        <div class="cap-ico">◈</div>
+        <h3>AI + Automation</h3>
+        <p>OpenClaw, AutoClaw, Hermes agents, LLMs and workflow automation — running the research pipeline end to end.</p>
+        <div class="cap-links"><a href="#ai">See the tools →</a></div>
+      </article>
+      <article class="cap-card">
+        <div class="cap-ico">◉</div>
+        <h3>Sales + Commercial Strategy</h3>
+        <p>11+ years in sales, negotiation and operations. A verified BDT 15Cr+ track record across Samsung and Isho.</p>
+        <div class="cap-links"><a href="#career">See the journey →</a></div>
+      </article>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ PROPERTY LAB ══════════════ -->
+<!-- ══════════════ 03 · PROPERTY INTELLIGENCE ══════════════ -->
 <section class="section alt" id="property">
   <div class="container">
-    <div class="section-head">
-      <div class="section-tag">// PROPERTY LAB</div>
-      <h2 class="section-title">Research at <span class="grad-text">industrial scale</span></h2>
-      <p class="section-sub">Every number below is a verified output of the screening pipeline.</p>
-    </div>
-
-    <!-- animated stat flow -->
-    <div class="prop-flow" id="propFlow">
-      <div class="pf-step">
-        <div class="pf-num grad-blue" data-stat="screened">0</div>
-        <div class="pf-label">PROPERTIES SCREENED</div>
-        <div class="pf-arrow">↓</div>
-      </div>
-      <div class="pf-step">
-        <div class="pf-num grad-purple" data-stat="postcodes">0</div>
-        <div class="pf-label">UNIQUE POSTCODES</div>
-        <div class="pf-arrow">↓</div>
-      </div>
-      <div class="pf-step">
-        <div class="pf-num grad-green" data-stat="targets">0</div>
-        <div class="pf-label">TARGET PROPERTIES</div>
-        <div class="pf-arrow">↓</div>
-      </div>
-      <div class="pf-step">
-        <div class="pf-num grad-pink" data-stat="auction">0</div>
-        <div class="pf-label">AUCTION LOTS</div>
+    <div class="sec-head">
+      <div class="sec-num">03</div>
+      <div>
+        <div class="sec-tag">PROPERTY INTELLIGENCE</div>
+        <h2 class="sec-title">Research that <span class="accent">holds up.</span></h2>
+        <p class="sec-sub">Every figure below is a verified output of the screening pipeline — documented, sourced and audited.</p>
       </div>
     </div>
 
-    <!-- UK map + research points -->
-    <div class="map-wrap">
+    <div class="prop-stats">
+      <div class="ps-card">
+        <div class="ps-num" data-stat="screened">0</div>
+        <div class="ps-label">PROPERTIES SCREENED</div>
+        <div class="ps-sub">PropertyData + Rightmove + auction portals</div>
+      </div>
+      <div class="ps-card">
+        <div class="ps-num" data-stat="postcodes">0</div>
+        <div class="ps-label">UNIQUE POSTCODES</div>
+        <div class="ps-sub">L · E1 · RM — across 79 towns</div>
+      </div>
+      <div class="ps-card">
+        <div class="ps-num" data-stat="auction">0</div>
+        <div class="ps-label">AUCTION LOTS</div>
+        <div class="ps-sub">Legal pack review + bid logic</div>
+      </div>
+      <div class="ps-card">
+        <div class="ps-num" data-stat="deals">0</div>
+        <div class="ps-label">DEALS COMPLETED</div>
+        <div class="ps-sub">From pipeline to purchase</div>
+      </div>
+    </div>
+
+    <div class="map-row">
       <div class="map-panel">
         <div class="map-head">
           <span class="map-title">UK RESEARCH COVERAGE</span>
-          <span class="map-live"><span class="pulse-dot"></span> LIVE SCREENING</span>
+          <span class="map-live"><span class="pulse-dot"></span> ACTIVE</span>
         </div>
         <div class="map-body">
-          <svg id="ukMap" class="uk-map" viewBox="0 0 340 430" role="img" aria-label="Simplified UK map showing property research locations: Liverpool, Wirral, London E1 and Grays">
+          <svg id="ukMap" class="uk-map" viewBox="0 0 340 430" role="img" aria-label="Simplified UK map showing research locations: Liverpool, Wirral, London E1 and Grays">
             <defs>
               <linearGradient id="mapFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#141a2e"/>
-                <stop offset="1" stop-color="#0a0d18"/>
+                <stop offset="0" stop-color="#191d21"/>
+                <stop offset="1" stop-color="#0d0f12"/>
               </linearGradient>
-              <radialGradient id="dotGlow" cx="0.5" cy="0.5" r="0.5">
-                <stop offset="0" stop-color="#59d8ff" stop-opacity="0.9"/>
-                <stop offset="1" stop-color="#59d8ff" stop-opacity="0"/>
-              </radialGradient>
             </defs>
             <path id="gbShape" d="M118,18 C128,10 150,6 168,14 C186,22 196,40 202,58 C208,78 212,96 216,112 C222,134 230,150 236,166 C242,182 248,196 252,210 C256,224 258,236 256,248 C254,260 248,270 240,278 C232,286 222,290 212,292 C202,294 192,298 184,306 C176,314 170,326 168,338 C166,350 170,362 178,372 C186,382 196,390 204,396 C210,400 216,404 220,410 C218,416 212,420 204,418 C196,416 188,408 182,398 C176,388 172,376 166,368 C158,358 148,354 138,352 C128,350 118,346 112,338 C106,330 104,318 108,308 C112,298 120,292 128,288 C136,284 144,278 148,268 C152,258 152,246 148,234 C144,222 138,210 132,198 C126,186 120,172 116,156 C112,140 110,122 112,104 C114,86 114,66 118,48 C120,38 118,26 118,18 Z" />
             <path id="walesShape" d="M96,300 C88,296 82,290 80,282 C78,274 82,266 90,262 C98,258 108,258 114,262 C120,266 122,274 120,282 C118,290 110,296 104,300 C100,302 98,302 96,300 Z" />
             <path id="nireShape" d="M36,268 C42,262 50,260 56,264 C62,268 64,276 62,284 C60,292 54,298 48,298 C42,298 38,292 36,286 C34,280 34,274 36,268 Z" />
-            <path id="mapDots" class="map-dots"></path>
+            <g id="mapDots" class="map-dots"></g>
             <g id="mapLabels"></g>
           </svg>
           <div class="map-tip" id="mapTip" hidden></div>
         </div>
-        <div class="map-foot">
-          <span class="map-stat"><b data-stat="towns">0</b> towns covered</span>
-          <span class="map-stat"><b data-stat="deals">0</b> deals completed</span>
-          <span class="map-stat"><b>L, E1, RM</b> focus postcodes</span>
-        </div>
       </div>
-      <div class="map-notes">
-        <article class="mnote">
-          <h3>Liverpool &amp; Wirral</h3>
-          <p>Full L-postcode BRRR screen — 79 towns, Liverpool City Centre 150 listings, Toxteth 54, Everton 25, Walton 24.</p>
-          <div class="mnote-chips"><span>20 postcodes</span><span>Crime cross-ref</span></div>
-        </article>
-        <article class="mnote">
-          <h3>London E1</h3>
-          <p>Standard-sale BRRR area-wise screen — 53 properties, 40-minute commute band.</p>
-          <div class="mnote-chips"><span>53 properties</span><span>40-min band</span></div>
-        </article>
-        <article class="mnote">
-          <h3>Grays / Chafford Hundred</h3>
-          <p>Freehold house focus — 10-property comparison, max-offer maths, station-distance analysis.</p>
-          <div class="mnote-chips"><span>Freehold</span><span>Max-offer math</span></div>
-        </article>
+      <div class="map-side">
+        <h3>How I analyse</h3>
+        <ol class="analyse-list">
+          <li><b>Source</b><span>Rightmove, auction portals, PropertyData exports</span></li>
+          <li><b>Screen</b><span>freehold · 2–3 beds · price band · postcode</span></li>
+          <li><b>Analyse</b><span>DUV from sold comps · refurb build-up · max offer maths</span></li>
+          <li><b>Due diligence</b><span>legal pack · EWS1 · SDLT · solicitor cross-check</span></li>
+        </ol>
+        <div class="map-cta">
+          <a href="https://github.com/fayzur060994/portfolio/tree/main/research_analysis" target="_blank" rel="noopener" class="btn btn-ghost small">Browse the workbooks ↗</a>
+        </div>
       </div>
     </div>
 
-    <!-- investment flow -->
-    <div class="flow-head">
-      <h3 class="flow-title">The investment <span class="grad-text">workflow</span></h3>
-      <p class="flow-sub">Tap any stage to see what happens there.</p>
+    <div class="chart-grid-2">
+      <div class="chart-card">
+        <h3 class="chart-title">Screening funnel — 3,589 to 2 deals</h3>
+        <canvas class="chart3d" id="chartFunnel" role="img" aria-label="3D funnel: 3589 raw listings to 12 biddable, 2 deals completed"></canvas>
+        <p class="chart-note">3,589 raw → 2,386 unique → 87 analysed → 31 leads · 12 biddable → 2 deals ✓</p>
+      </div>
+      <div class="chart-card">
+        <h3 class="chart-title">Screening speed — week one</h3>
+        <canvas class="chart3d" id="chartLine" role="img" aria-label="3D line chart: time per screening from 165 to 55 minutes"></canvas>
+        <p class="chart-note">165min → 55min per property · −67% with AI automation</p>
+      </div>
     </div>
-    <div class="inv-flow" id="invFlow">
-      <button class="inv-stage" data-stage="0">SOURCE <span class="inv-idx">01</span></button>
-      <button class="inv-stage" data-stage="1">SCREEN <span class="inv-idx">02</span></button>
-      <button class="inv-stage" data-stage="2">ANALYSE <span class="inv-idx">03</span></button>
-      <button class="inv-stage" data-stage="3">DUE DILIGENCE <span class="inv-idx">04</span></button>
-      <button class="inv-stage" data-stage="4">REFURB <span class="inv-idx">05</span></button>
-      <button class="inv-stage" data-stage="5">BRRR <span class="inv-idx">06</span></button>
-      <button class="inv-stage" data-stage="6">REFINANCE <span class="inv-idx">07</span></button>
-    </div>
-    <div class="inv-detail" id="invDetail" role="region" aria-live="polite"></div>
   </div>
 </section>
 
-<!-- ══════════════ AI LAB ══════════════ -->
+<!-- ══════════════ 04 · AI + DATA ══════════════ -->
 <section class="section" id="ai">
   <div class="container">
-    <div class="section-head">
-      <div class="section-tag">// AI LAB</div>
-      <h2 class="section-title">Ask <span class="grad-text">FAYZUR AI</span></h2>
-      <p class="section-sub">A local knowledge engine over my real experience. Try a prompt below.</p>
-    </div>
-    <div class="ai-lab">
-      <div class="ai-orb-side" aria-hidden="true">
-        <div class="ai-orb">
-          <div class="ai-ring r1"></div>
-          <div class="ai-ring r2"></div>
-          <div class="ai-core">F</div>
-        </div>
-        <div class="ai-orb-label">FAYZUR AI</div>
+    <div class="sec-head">
+      <div class="sec-num">04</div>
+      <div>
+        <div class="sec-tag">AI + DATA</div>
+        <h2 class="sec-title">Simple interface, <span class="accent">sophisticated underneath.</span></h2>
+        <p class="sec-sub">One loop runs across everything I do: raw information in, better decisions out.</p>
       </div>
-      <div class="ai-chat">
+    </div>
+
+    <div class="ai-flow">
+      <div class="ai-step"><b>01</b><span>RAW DATA</span></div>
+      <div class="ai-arrow">→</div>
+      <div class="ai-step"><b>02</b><span>AI-ASSISTED RESEARCH</span></div>
+      <div class="ai-arrow">→</div>
+      <div class="ai-step"><b>03</b><span>ANALYSIS</span></div>
+      <div class="ai-arrow">→</div>
+      <div class="ai-step"><b>04</b><span>DECISION</span></div>
+    </div>
+
+    <div class="ai-tools">
+      <span>AI-assisted research</span><span>Workflow automation</span><span>LLMs</span><span>n8n</span><span>APIs</span><span>Excel</span><span>Data analysis</span>
+    </div>
+
+    <div class="ai-row">
+      <div class="ai-chat-card">
+        <h3 class="chart-title">FAYZUR AI <span class="ai-live"><span class="pulse-dot"></span> LOCAL KNOWLEDGE</span></h3>
         <div class="chat-log" id="chatLog" role="log" aria-live="polite">
           <div class="chat-msg bot">
-            <span class="chat-avatar">◆</span>
-            <div class="chat-bubble">Hello. I am FAYZUR AI — a local knowledge engine trained on Fayzur's verified experience. Ask me anything about his work.</div>
+            <span class="chat-avatar">F</span>
+            <div class="chat-bubble">Ask me anything about Fayzur's verified portfolio — property, AI, career or sales.</div>
           </div>
         </div>
         <div class="chat-suggests" id="chatSuggests">
-          <button class="chat-chip">What does Fayzur specialise in?</button>
+          <button class="chat-chip">What does Fayzur do?</button>
           <button class="chat-chip">Property experience?</button>
-          <button class="chat-chip">Strongest achievements?</button>
-          <button class="chat-chip">AI tools used?</button>
-          <button class="chat-chip">Explain his BRRR experience</button>
-          <button class="chat-chip">Why hire Fayzur?</button>
+          <button class="chat-chip">AI tools?</button>
+          <button class="chat-chip">Career timeline?</button>
         </div>
         <form class="chat-form" id="chatForm">
           <label class="sr-only" for="chatInput">Ask about Fayzur</label>
           <input id="chatInput" type="text" placeholder="Ask anything…" autocomplete="off" />
-          <button type="submit" class="chat-send" aria-label="Send">➤</button>
+          <button type="submit" class="chat-send" aria-label="Send">→</button>
         </form>
       </div>
-    </div>
-
-    <!-- AI network -->
-    <div class="network-wrap">
-      <h3 class="network-title">AI technology <span class="grad-text">network</span></h3>
-      <canvas id="aiNetwork" class="ai-network" aria-label="Interactive AI technology network: LLM, agents, automation, data, property"></canvas>
-      <div class="net-fallback" id="netFallback">
-        <span class="net-chip">LLMs</span><span class="net-chip">AI Agents</span><span class="net-chip">Automation</span><span class="net-chip">Data</span><span class="net-chip">Property</span>
+      <div class="ai-note">
+        <p class="note-big">"The pipeline doesn't replace judgment — it gives it better inputs."</p>
+        <p class="note-small">AI is applied where it compounds: screening volume, evidence checks, reporting and content. The decisions stay human.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ DATA LAB ══════════════ -->
-<section class="section alt" id="data">
+<!-- ══════════════ 05 · CAREER ══════════════ -->
+<section class="section alt" id="career">
   <div class="container">
-    <div class="section-head">
-      <div class="section-tag">// DATA LAB</div>
-      <h2 class="section-title">Numbers that <span class="grad-text">speak</span></h2>
-      <p class="section-sub">Measured outputs. No vanity metrics. No fabricated figures.</p>
-    </div>
-
-    <div class="data-hero">
-      <div class="data-tile t-samsung">
-        <div class="data-val grad-blue" data-stat="electronics">0</div>
-        <div class="data-label">SAMSUNG · ELECTRONICS SALES (BDT Cr)</div>
-      </div>
-      <div class="data-tile t-isho">
-        <div class="data-val grad-green" data-stat="furniture">0</div>
-        <div class="data-label">ISHO FURNITURE · SHOWROOM SALES (BDT Cr)</div>
-      </div>
-      <div class="data-tile t-orders">
-        <div class="data-val grad-purple" data-stat="orders">0</div>
-        <div class="data-label">ORDERS · 20 MONTHS</div>
-      </div>
-      <div class="data-tile t-speed">
-        <div class="data-val grad-pink">−67%</div>
-        <div class="data-label">TIME PER SCREENING · 165→55 MIN</div>
+    <div class="sec-head">
+      <div class="sec-num">05</div>
+      <div>
+        <div class="sec-tag">CAREER</div>
+        <h2 class="sec-title">From territory sales <span class="accent">to property research.</span></h2>
+        <p class="sec-sub">Factual roles, dates and results — no inflation.</p>
       </div>
     </div>
-
-    <div class="charts-grid">
-      <div class="chart-card">
-        <h3 class="chart-title">Sales Volume — Furniture (BDT Cr)</h3>
-        <canvas class="chart3d" id="chartBars" role="img" aria-label="3D bar chart: furniture sales growing to 2.37 crore BDT"></canvas>
-        <p class="chart-note">Isho Furniture · 454 orders · 20 months</p>
-        <div class="chart-insight"><span class="insight-ico">▲</span> 7.9× growth · peak month BDT 2.37Cr</div>
-      </div>
-      <div class="chart-card">
-        <h3 class="chart-title">Property Screening Funnel</h3>
-        <canvas class="chart3d" id="chartFunnel" role="img" aria-label="3D funnel chart: 3589 raw listings to 12 biddable, 2 deals completed"></canvas>
-        <p class="chart-note">Many bids placed · 2 deals successfully completed</p>
-        <div class="chart-insight"><span class="insight-ico">◆</span> 3,589 raw listings → 12 biddable · 2 deals completed ✓</div>
-      </div>
-      <div class="chart-card">
-        <h3 class="chart-title">Speed Improvement — Week One</h3>
-        <canvas class="chart3d" id="chartLine" role="img" aria-label="3D line chart: time per screening from 165 to 55 minutes"></canvas>
-        <p class="chart-note">AI automation + prompt iteration</p>
-        <div class="chart-insight"><span class="insight-ico">▼</span> 165min → 55min per property · −67%</div>
-      </div>
-    </div>
-
-    <!-- PROJECTS -->
-    <div class="section-head proj-head">
-      <div class="section-tag">// PROJECTS</div>
-      <h2 class="section-title">Selected <span class="grad-text">work</span></h2>
-      <p class="section-sub">Real research outputs — anonymized for client confidentiality.</p>
-    </div>
-    <div class="pf-grid">
-      <a class="pf-card" href="https://github.com/fayzur060994/portfolio/tree/main/research_analysis" target="_blank" rel="noopener">
-        <div class="pf-top g1"><span class="pf-tag">BRRR ANALYSIS</span></div>
-        <div class="pf-body">
-          <h3>Liverpool BRRR — Real DUV</h3>
-          <p class="pf-q"><b>Problem:</b> overpriced BMV fantasy figures.</p>
-          <p class="pf-a"><b>Approach:</b> DUV from actual sold comps + evidence sheet; 50% bridge / 50% cash model.</p>
-          <p class="pf-o"><b>Outcome:</b> 12 biddable · 2 deals completed.</p>
-          <div class="pf-chips"><span class="pf-chip">3,589 screened</span><span class="pf-chip">12 biddable</span><span class="pf-chip">2 deals done</span></div>
-          <span class="pf-link">View repo →</span>
-        </div>
-      </a>
-      <a class="pf-card" href="https://github.com/fayzur060994/portfolio/tree/main/research_analysis" target="_blank" rel="noopener">
-        <div class="pf-top g4"><span class="pf-tag">SCREENING</span></div>
-        <div class="pf-body">
-          <h3>Liverpool All-L-Postcode Screen</h3>
-          <p class="pf-q"><b>Problem:</b> which L postcodes actually BRRR?</p>
-          <p class="pf-a"><b>Approach:</b> every L postcode screened; standard sale + crime-rate cross-reference.</p>
-          <p class="pf-o"><b>Outcome:</b> ranked postcode shortlist for bidding.</p>
-          <div class="pf-chips"><span class="pf-chip">20 postcodes</span><span class="pf-chip">Crime cross-ref</span></div>
-          <span class="pf-link">View repo →</span>
-        </div>
-      </a>
-      <a class="pf-card" href="https://github.com/fayzur060994/portfolio/tree/main/research_analysis" target="_blank" rel="noopener">
-        <div class="pf-top g5"><span class="pf-tag">LONDON E1</span></div>
-        <div class="pf-body">
-          <h3>London E1 Standard Sale BRRR</h3>
-          <p class="pf-q"><b>Problem:</b> E1 pricing varies street by street.</p>
-          <p class="pf-a"><b>Approach:</b> 53 properties area-wise, 40-min commute band, crime summary.</p>
-          <p class="pf-o"><b>Outcome:</b> area-wise BRRR ranking for E1.</p>
-          <div class="pf-chips"><span class="pf-chip">53 properties</span><span class="pf-chip">40-min band</span></div>
-          <span class="pf-link">View repo →</span>
-        </div>
-      </a>
-      <a class="pf-card" href="https://github.com/fayzur060994/portfolio/tree/main/research_analysis" target="_blank" rel="noopener">
-        <div class="pf-top g6"><span class="pf-tag">GRAYS</span></div>
-        <div class="pf-body">
-          <h3>Grays Property Comparison</h3>
-          <p class="pf-q"><b>Problem:</b> freehold vs leasehold trap near stations.</p>
-          <p class="pf-a"><b>Approach:</b> freehold-only shortlist, max-offer maths, sold comparables, station distance.</p>
-          <p class="pf-o"><b>Outcome:</b> 10-property ranked comparison.</p>
-          <div class="pf-chips"><span class="pf-chip">10 properties</span><span class="pf-chip">Max-offer math</span></div>
-          <span class="pf-link">View repo →</span>
-        </div>
-      </a>
-      <a class="pf-card" href="https://github.com/fayzur060994/portfolio/tree/main/case_studies" target="_blank" rel="noopener">
-        <div class="pf-top g2"><span class="pf-tag">CASE STUDY</span></div>
-        <div class="pf-body">
-          <h3>Manningham Road L4 — BRRR</h3>
-          <p class="pf-q"><b>Problem:</b> single-property risk before bidding.</p>
-          <p class="pf-a"><b>Approach:</b> scenarios, document archive, sold comps, bid recommendation.</p>
-          <p class="pf-o"><b>Outcome:</b> evidence-based bid decision.</p>
-          <div class="pf-chips"><span class="pf-chip">3 scenarios</span><span class="pf-chip">Bid rec</span></div>
-          <span class="pf-link">View repo →</span>
-        </div>
-      </a>
-      <a class="pf-card" href="https://github.com/fayzur060994/portfolio/tree/main/prompt_library" target="_blank" rel="noopener">
-        <div class="pf-top g7"><span class="pf-tag">AI</span></div>
-        <div class="pf-body">
-          <h3>Prompt Library &amp; Automation</h3>
-          <p class="pf-q"><b>Problem:</b> slow, manual screening loops.</p>
-          <p class="pf-a"><b>Approach:</b> reusable prompts + Chrome-CDP scraper pipeline + audit engine.</p>
-          <p class="pf-o"><b>Outcome:</b> −67% time per screening.</p>
-          <div class="pf-chips"><span class="pf-chip">4 categories</span><span class="pf-chip">20+ prompts</span><span class="pf-chip">−67% time</span></div>
-          <span class="pf-link">View repo →</span>
-        </div>
-      </a>
-    </div>
-
-    <!-- REPO ARCHIVE -->
-    <div class="section-head proj-head">
-      <div class="section-tag">// REPO</div>
-      <h2 class="section-title">Work <span class="grad-text">archive</span></h2>
-      <p class="section-sub">Eight domains. Click any folder to expand.</p>
-    </div>
-    <div class="repo-card">
-      <div class="repo-head">
-        <span class="repo-dots"><i></i><i></i><i></i></span>
-        <span class="repo-path">fayzur060994/portfolio</span>
-        <a href="https://github.com/fayzur060994/portfolio" target="_blank" rel="noopener" class="repo-link">GitHub ↗</a>
-      </div>
-      <div class="repo-body" id="repoBody"></div>
+    <div class="tl">
+      <article class="tl-item">
+        <div class="tl-meta"><span class="tl-date">MAY 2026 — PRESENT</span><span class="tl-badge current">CURRENT</span></div>
+        <h3>Operations &amp; Research Lead to MD</h3>
+        <div class="tl-co">BricksBuilder · UK property research</div>
+        <p>Sourcing and due diligence for BRRR, auction and BMV deals. ARV, max purchase price, SDLT and bidding strategy. AI tooling for automation.</p>
+        <div class="tl-result">Result — <b>3,589 screened · 2 deals completed</b></div>
+      </article>
+      <article class="tl-item">
+        <div class="tl-meta"><span class="tl-date">OCT 2024 — MAY 2026</span><span class="tl-badge">2.37CR</span></div>
+        <h3>Assistant Manager — Showroom Operations</h3>
+        <div class="tl-co">Isho Furniture (Dekko Isho Ltd.) · Dhaka</div>
+        <p>Floor supervision, high-value negotiation, team leadership, stock control, daily sales reporting.</p>
+        <div class="tl-result">Result — <b>BDT 2.37 Cr showroom sales · 454 orders</b></div>
+      </article>
+      <article class="tl-item">
+        <div class="tl-meta"><span class="tl-date">NOV 2023 — SEP 2024</span></div>
+        <h3>APEC — Experience Consultant</h3>
+        <div class="tl-co">Asian Paints Bangladesh Ltd. · Dhaka</div>
+        <p>Color consulting, product demos, painter training, market insights for strategy teams.</p>
+        <div class="tl-result">Result — <b>structured market insight fed to strategy</b></div>
+      </article>
+      <article class="tl-item">
+        <div class="tl-meta"><span class="tl-date">JAN 2021 — OCT 2023</span><span class="tl-badge">12.78CR</span></div>
+        <h3>Experience Consultant</h3>
+        <div class="tl-co">Samsung Consumer Electronics · Dhaka</div>
+        <p>Showroom operations, lead nurturing, team training, market intelligence.</p>
+        <div class="tl-result">Result — <b>BDT 12.78 Cr sales over 3 years</b></div>
+      </article>
+      <article class="tl-item">
+        <div class="tl-meta"><span class="tl-date">JAN 2019 — DEC 2020</span></div>
+        <h3>Business Development Executive</h3>
+        <div class="tl-co">Jadroo.com · Dhaka</div>
+        <p>E-business strategy, partner negotiation, integrated campaigns, store inventory &amp; merchandising.</p>
+        <div class="tl-result">Result — <b>partner network + campaign delivery</b></div>
+      </article>
+      <article class="tl-item">
+        <div class="tl-meta"><span class="tl-date">JAN 2016 — NOV 2018</span></div>
+        <h3>Territory Sales Officer</h3>
+        <div class="tl-co">BNMKS · Dhaka</div>
+        <p>Territory strategy, dealer network building, lead generation, trade shows, team training.</p>
+        <div class="tl-result">Result — <b>dealer network + lead pipeline</b></div>
+      </article>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ CAREER ══════════════ -->
-<section class="section" id="career">
+<!-- ══════════════ 06 · CASE STUDIES ══════════════ -->
+<section class="section" id="cases">
   <div class="container">
-    <div class="section-head">
-      <div class="section-tag">// CAREER</div>
-      <h2 class="section-title">The <span class="grad-text">journey</span></h2>
-      <p class="section-sub">From territory sales in Dhaka to UK property research lead. Scroll the track →</p>
-    </div>
-    <div class="journey" id="journey">
-      <div class="journey-track" id="journeyTrack">
-        <article class="station" data-station="0">
-          <div class="st-node"><span class="st-dot"></span><span class="st-line"></span></div>
-          <div class="st-card">
-            <div class="st-year">2019 — 2020</div>
-            <h3>JADROO</h3>
-            <div class="st-role">Business Development Executive</div>
-            <p>E-business strategy, partner negotiation, integrated campaigns, store inventory &amp; merchandising.</p>
-          </div>
-        </article>
-        <article class="station" data-station="1">
-          <div class="st-node"><span class="st-dot promo"></span><span class="st-line"></span></div>
-          <div class="st-card">
-            <div class="st-year">2021 — 2023</div>
-            <h3>SAMSUNG</h3>
-            <div class="st-role">Experience Consultant</div>
-            <p>BDT 12.78 crore electronics sales over 3 years. Showroom operations, lead nurturing, team training, market intelligence.</p>
-            <div class="st-badge">12.78Cr SALES</div>
-          </div>
-        </article>
-        <article class="station" data-station="2">
-          <div class="st-node"><span class="st-dot"></span><span class="st-line"></span></div>
-          <div class="st-card">
-            <div class="st-year">2023 — 2024</div>
-            <h3>ASIAN PAINTS</h3>
-            <div class="st-role">APEC — Experience Consultant</div>
-            <p>Color consulting, product demos, painter training, market insights for strategy teams.</p>
-          </div>
-        </article>
-        <article class="station" data-station="3">
-          <div class="st-node"><span class="st-dot promo"></span><span class="st-line"></span></div>
-          <div class="st-card">
-            <div class="st-year">2024 — 2026</div>
-            <h3>ISHO</h3>
-            <div class="st-role">Assistant Manager — Showroom Operations</div>
-            <p>BDT 2.37 crore showroom sales. Floor supervision, high-value negotiation, team leadership, stock control, daily reporting.</p>
-            <div class="st-badge">2.37Cr SALES</div>
-          </div>
-        </article>
-        <article class="station" data-station="4">
-          <div class="st-node"><span class="st-dot promo"></span><span class="st-line"></span></div>
-          <div class="st-card">
-            <div class="st-year">MAY 2026 — PRESENT</div>
-            <h3>BRICKS BUILDER</h3>
-            <div class="st-role">Operations &amp; Research Lead to MD</div>
-            <p>UK property sourcing &amp; due diligence for BRRR, auction and BMV. ARV, Max Purchase Price, SDLT, bidding strategy. AI tooling for automation. B2B LinkedIn content.</p>
-            <div class="st-badge current">CURRENT</div>
-          </div>
-        </article>
-        <article class="station" data-station="5">
-          <div class="st-node"><span class="st-dot future"></span></div>
-          <div class="st-card future-card">
-            <div class="st-year">NEXT</div>
-            <h3>NEXT CHAPTER</h3>
-            <div class="st-role">Where data meets decisions</div>
-            <p>Property consultancy · investment analysis · AI-powered research — building the next stage of the journey.</p>
-          </div>
-        </article>
+    <div class="sec-head">
+      <div class="sec-num">06</div>
+      <div>
+        <div class="sec-tag">SELECTED CASE STUDIES</div>
+        <h2 class="sec-title">Work you can <span class="accent">open and check.</span></h2>
+        <p class="sec-sub">Every case links to the actual files in the public portfolio repo.</p>
       </div>
     </div>
-    <div class="journey-controls">
-      <button class="jc-btn" id="jcPrev" aria-label="Previous station">←</button>
-      <span class="jc-count" id="jcCount">01 / 06</span>
-      <button class="jc-btn" id="jcNext" aria-label="Next station">→</button>
-    </div>
-
-    <!-- Dhaka → UK narrative -->
-    <div class="geo">
-      <div class="geo-step">
-        <div class="geo-ico">🏙</div>
-        <h3>DHAKA</h3>
-        <p>11+ years in sales, retail operations and B2B development.</p>
-      </div>
-      <div class="geo-arrow">→</div>
-      <div class="geo-step">
-        <div class="geo-ico">🌐</div>
-        <h3>REMOTE / INTERNATIONAL</h3>
-        <p>Cross-timezone B2B content work and client delivery.</p>
-      </div>
-      <div class="geo-arrow">→</div>
-      <div class="geo-step">
-        <div class="geo-ico">🏴</div>
-        <h3>UNITED KINGDOM</h3>
-        <p>Property research lead — BRRR, BMV, auction due diligence.</p>
-      </div>
+    <div class="case-grid">
+      <article class="case-card">
+        <div class="case-top"><span class="case-tag">LIVERPOOL &amp; WIRRAL</span><span class="case-year">2026</span></div>
+        <h3>Full L-postcode BRRR screen</h3>
+        <dl>
+          <div><dt>Problem</dt><dd>Where does BRRR actually work in Liverpool?</dd></div>
+          <div><dt>Approach</dt><dd>Postcode-by-postcode screen with crime-rate cross-reference.</dd></div>
+          <div><dt>Analysis</dt><dd>DUV from sold comps; 50% bridge / 50% cash model.</dd></div>
+          <div><dt>Result</dt><dd>79 towns mapped · 12 biddable · <b>2 deals completed</b></dd></div>
+        </dl>
+        <a class="case-link" href="https://github.com/fayzur060994/portfolio/tree/main/research_analysis" target="_blank" rel="noopener">Open the workbooks ↗</a>
+      </article>
+      <article class="case-card">
+        <div class="case-top"><span class="case-tag">GRAYS / CHAFFORD HUNDRED</span><span class="case-year">2026</span></div>
+        <h3>Freehold house search, station-adjacent</h3>
+        <dl>
+          <div><dt>Problem</dt><dd>Freehold vs leasehold traps near stations.</dd></div>
+          <div><dt>Approach</dt><dd>Freehold-only shortlist, station-distance filter.</dd></div>
+          <div><dt>Analysis</dt><dd>Max-offer maths from sold comparables.</dd></div>
+          <div><dt>Result</dt><dd>10-property comparison · John Street RM17 identified</dd></div>
+        </dl>
+        <a class="case-link" href="https://github.com/fayzur060994/portfolio/tree/main/research_analysis" target="_blank" rel="noopener">Open the workbooks ↗</a>
+      </article>
+      <article class="case-card">
+        <div class="case-top"><span class="case-tag">DUE DILIGENCE + AI PIPELINE</span><span class="case-year">2026</span></div>
+        <h3>Legal pack system &amp; screening automation</h3>
+        <dl>
+          <div><dt>Problem</dt><dd>Slow, manual due diligence at scale.</dd></div>
+          <div><dt>Approach</dt><dd>Checklist + max offer per property; Chrome-CDP scraper pipeline.</dd></div>
+          <div><dt>Analysis</dt><dd>Every cost line cross-checked with sourced evidence.</dd></div>
+          <div><dt>Result</dt><dd>8 properties processed · screening time <b>−67%</b></dd></div>
+        </dl>
+        <a class="case-link" href="https://github.com/fayzur060994/portfolio/tree/main/ai/scripts" target="_blank" rel="noopener">Open the scripts ↗</a>
+      </article>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ ABOUT ══════════════ -->
+<!-- ══════════════ 07 · ABOUT ══════════════ -->
 <section class="section alt" id="about">
   <div class="container">
-    <div class="section-head">
-      <div class="section-tag">// ABOUT</div>
-      <h2 class="section-title">One operator, <span class="grad-text">five layers</span></h2>
+    <div class="sec-head">
+      <div class="sec-num">07</div>
+      <div>
+        <div class="sec-tag">ABOUT</div>
+        <h2 class="sec-title">Commercial instinct. Research discipline. <span class="accent">Technology leverage.</span></h2>
+      </div>
     </div>
     <div class="about-grid">
-      <div class="about-side">
-        <div class="about-bio">
-          <h3>Fayzur Rahman</h3>
-          <p class="about-role">Operations &amp; Research Lead to MD — BricksBuilder.co.uk</p>
-          <p>Results-driven professional with 11+ years across UK property sourcing, retail management and B2B development. Started as a Territory Sales Officer at BNMKS (2016–2018), then built a BDT 15Cr+ combined sales track record before moving into UK property research.</p>
-          <p>Today I run an AI-augmented screening pipeline that turns raw listings into investment decisions — 3,589 properties screened, 2 deals completed.</p>
-        </div>
-        <div class="about-quote">“Property data, processed properly, becomes investment decisions.”</div>
-      </div>
-      <div class="about-tiles">
-        <button class="about-tile" data-tile="0">
-          <span class="at-ico">⌂</span><span class="at-name">PROPERTY</span>
-          <span class="at-desc">Investment research and sourcing</span>
-        </button>
-        <button class="about-tile" data-tile="1">
-          <span class="at-ico">◫</span><span class="at-name">DATA</span>
-          <span class="at-desc">Research and analytics</span>
-        </button>
-        <button class="about-tile" data-tile="2">
-          <span class="at-ico">◈</span><span class="at-name">AI</span>
-          <span class="at-desc">Automation and agents</span>
-        </button>
-        <button class="about-tile" data-tile="3">
-          <span class="at-ico">◉</span><span class="at-name">SALES</span>
-          <span class="at-desc">Commercial performance</span>
-        </button>
-        <button class="about-tile" data-tile="4">
-          <span class="at-ico">▤</span><span class="at-name">BUSINESS</span>
-          <span class="at-desc">Operational thinking</span>
-        </button>
-      </div>
+      <div class="about-line"><span class="al-ico">◉</span><div><h3>Sales &amp; negotiation</h3><p>11+ years across BNMKS, Jadroo, Samsung, Asian Paints and Isho — BDT 15Cr+ combined verified sales.</p></div></div>
+      <div class="about-line"><span class="al-ico">◧</span><div><h3>Property research</h3><p>UK sourcing, BRRR/BMV analysis, auction due diligence — 3,589 properties screened and documented.</p></div></div>
+      <div class="about-line"><span class="al-ico">◈</span><div><h3>AI-powered delivery</h3><p>OpenClaw, AutoClaw, Hermes agents and LLMs applied to real research workflows — not for show.</p></div></div>
     </div>
-
-    <!-- stats single source of truth -->
-    <div class="stats-grid" id="statsGrid">
-      <div class="stat-card"><div class="stat-num grad-purple" data-stat="screened">0</div><div class="stat-label">Properties Screened</div></div>
-      <div class="stat-card"><div class="stat-num grad-blue" data-stat="postcodes">0</div><div class="stat-label">Unique Postcodes</div></div>
-      <div class="stat-card"><div class="stat-num grad-green" data-stat="targets">0</div><div class="stat-label">Target Properties</div></div>
-      <div class="stat-card"><div class="stat-num grad-pink" data-stat="auction">0</div><div class="stat-label">Auction Lots</div></div>
-      <div class="stat-card"><div class="stat-num grad-green" data-stat="deals">0</div><div class="stat-label">Deals Completed</div></div>
+    <div class="about-bio">
+      <p>I started in territory sales, built a multi-crore retail track record, then moved into UK property research where I run an AI-assisted screening pipeline. The through-line is simple: understand people, understand the business, analyse the opportunity, use technology to move faster.</p>
     </div>
-
-    <!-- skills constellation -->
-    <div class="skills-wrap">
-      <h3 class="network-title">Skill <span class="grad-text">constellation</span></h3>
-      <canvas id="skillNet" class="skill-net" aria-label="Interactive skill constellation: property, data, AI and commercial skill nodes"></canvas>
-      <div class="net-fallback" id="skillFallback">
-        <span class="net-chip">BRRR</span><span class="net-chip">BMV</span><span class="net-chip">Sourcing</span><span class="net-chip">Auction DD</span><span class="net-chip">Refurb Analysis</span>
-        <span class="net-chip">Excel</span><span class="net-chip">Research</span><span class="net-chip">Analytics</span><span class="net-chip">Reporting</span>
-        <span class="net-chip">LLMs</span><span class="net-chip">AI Agents</span><span class="net-chip">Automation</span><span class="net-chip">Workflow Design</span>
-        <span class="net-chip">Sales</span><span class="net-chip">Negotiation</span><span class="net-chip">BD</span><span class="net-chip">Account Mgmt</span>
-      </div>
+    <div class="about-stats">
+      <div class="as-item"><b data-stat="electronics">0</b><span>SAMSUNG SALES · BDT Cr</span></div>
+      <div class="as-item"><b data-stat="furniture">0</b><span>ISHO SALES · BDT Cr</span></div>
+      <div class="as-item"><b data-stat="orders">0</b><span>ORDERS · 20 MONTHS</span></div>
+      <div class="as-item"><b data-stat="towns">0</b><span>TOWNS COVERED</span></div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ CONTACT ══════════════ -->
+<!-- ══════════════ 08 · CONTACT ══════════════ -->
 <section class="section" id="contact">
   <div class="container">
-    <div class="contact-head">
-      <div class="section-tag">// CONTACT</div>
-      <h2 class="section-title big">Let's build something <span class="grad-text">intelligent.</span></h2>
-      <p class="section-sub">Whether it's property, data, automation or business — let's turn information into action.</p>
-    </div>
-    <div class="contact-btns">
-      <a class="btn btn-primary magnetic" href="mailto:sense060994@gmail.com">CONTACT ME <span class="btn-arrow">→</span></a>
-      <a class="btn btn-ghost" href="https://github.com/fayzur060994/portfolio/tree/main/cv" target="_blank" rel="noopener">VIEW CV</a>
-      <a class="btn btn-ghost" href="https://linkedin.com/in/fayzur0609" target="_blank" rel="noopener">LINKEDIN</a>
-      <a class="btn btn-ghost" href="https://github.com/fayzur060994" target="_blank" rel="noopener">GITHUB</a>
-    </div>
-    <div class="contact-grid">
-      <a class="contact-card" href="mailto:sense060994@gmail.com">
-        <div class="c-icon">✉️</div><div class="c-label">Email</div><div class="c-value">sense060994@gmail.com</div>
-      </a>
-      <a class="contact-card" href="tel:+8801795913204">
-        <div class="c-icon">📞</div><div class="c-label">Phone</div><div class="c-value">+880 1795-913204</div>
-      </a>
-      <a class="contact-card" href="https://linkedin.com/in/fayzur0609" target="_blank" rel="noopener">
-        <div class="c-icon">💼</div><div class="c-label">LinkedIn</div><div class="c-value">fayzur0609</div>
-      </a>
-      <a class="contact-card" href="https://github.com/fayzur060994" target="_blank" rel="noopener">
-        <div class="c-icon">🐙</div><div class="c-label">GitHub</div><div class="c-value">fayzur060994</div>
-      </a>
+    <div class="contact-inner">
+      <div class="sec-tag">CONTACT</div>
+      <h2 class="contact-title">Have a problem worth <span class="accent">thinking through?</span></h2>
+      <p class="contact-sub">Property sourcing, research support, AI-assisted workflows or commercial strategy — let's talk.</p>
+      <div class="contact-actions">
+        <a class="btn btn-primary magnetic" href="mailto:sense060994@gmail.com">Let's talk <span class="btn-arrow">→</span></a>
+        <a class="btn btn-ghost" href="https://github.com/fayzur060994/portfolio/tree/main/cv" target="_blank" rel="noopener">Download CV</a>
+      </div>
+      <div class="contact-row">
+        <a href="mailto:sense060994@gmail.com">sense060994@gmail.com</a>
+        <a href="tel:+8801795913204">+880 1795-913204</a>
+        <a href="https://linkedin.com/in/fayzur0609" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/fayzur060994" target="_blank" rel="noopener">GitHub</a>
+      </div>
     </div>
   </div>
 </section>
 
 <footer class="footer">
   <div class="container">
-    <p>FAYZUR RAHMAN · PROPERTY × AI × RESEARCH × SALES</p>
-    <p class="foot-tech">Static site · no tracking · BSc Computer Science &amp; Engineering</p>
+    <p>FAYZUR RAHMAN — PROPERTY · AI · RESEARCH · SALES</p>
+    <p class="foot-note">Static site · no tracking · BSc Computer Science &amp; Engineering</p>
   </div>
 </footer>
 

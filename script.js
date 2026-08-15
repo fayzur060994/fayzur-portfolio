@@ -1,24 +1,24 @@
 /* ═══════════════════════════════════════════════════════
-   FAYZUR RAHMAN — DIGITAL COMMAND CENTER (V2)
+   FAYZUR RAHMAN — PREMIUM ≠ COMPLEX (V4)
    Vanilla JS · no libraries · GitHub Pages ready
+   "Simple interface. Sophisticated technology underneath."
    ═══════════════════════════════════════════════════════ */
 
 /* ─────────────────────────────────────────────
-   SINGLE SOURCE OF TRUTH — all site statistics
+   SINGLE SOURCE OF TRUTH — all statistics.
    Every [data-stat] element reads from here.
-   (fixes the old "About shows 0" inconsistency)
    ───────────────────────────────────────────── */
 const SITE_STATS = {
-  screened: 3589,      // properties screened (PropertyData + Rightmove + auctions)
+  screened: 3589,      // properties screened
   postcodes: 2386,     // unique postcodes
-  targets: 2573,       // 2–3 bed target properties
   auction: 350,        // auction lots analysed
-  deals: 2,            // deals successfully completed
-  towns: 79,           // towns covered (Liverpool export)
-  orders: 454,         // Isho furniture orders
-  furniture: 2.37,     // BDT Cr Isho showroom sales
+  deals: 2,            // deals completed
+  towns: 79,           // towns covered
+  orders: 454,         // Isho orders · 20 months
+  furniture: 2.37,     // BDT Cr Isho sales
   electronics: 12.78,  // BDT Cr Samsung sales
-  biddable: 12,        // biddable auction candidates
+  targets: 2573,       // 2–3 bed targets
+  biddable: 12,        // biddable candidates
 };
 
 const fmtStat = (v) =>
@@ -37,71 +37,10 @@ function detectPerf() {
   else if (mqCoarse.matches && (mem <= 4 || cores <= 4)) mode = 'low';
   else if (mem <= 4 || cores <= 4 || mqCoarse.matches) mode = 'medium';
   document.documentElement.classList.add('perf-' + mode);
-  if (mode === 'low') {
-    const p = document.getElementById('particles');
-    if (p) p.style.display = 'none';
-  }
   return mode;
 }
 const PERF = detectPerf();
-const DPR_CAP = PERF === 'high' ? 2 : PERF === 'medium' ? 1.5 : 1;
-
-/* ────────────────────────────── LOADER ────────────────────────────── */
-function initLoader() {
-  const loader = document.getElementById('loader');
-  const bar = document.getElementById('loaderBar');
-  if (!loader) return;
-  if (mqReduced.matches) {
-    loader.classList.add('done');
-    setTimeout(() => loader.remove(), 700);
-    return;
-  }
-  let pct = 0;
-  const step = () => {
-    pct = Math.min(pct + Math.random() * 22 + 8, 100);
-    if (bar) bar.style.width = pct + '%';
-    if (pct < 100) setTimeout(step, 90);
-    else {
-      setTimeout(() => {
-        loader.classList.add('done');
-        setTimeout(() => loader.remove(), 700);
-      }, 250);
-    }
-  };
-  setTimeout(step, 150);
-}
-
-/* ────────────────────────────── CUSTOM CURSOR ────────────────────────────── */
-function initCursor() {
-  const dot = document.getElementById('cursorDot');
-  const ring = document.getElementById('cursorRing');
-  if (!dot || !ring || !mqFine.matches) return;
-  let mx = -100, my = -100, rx = -100, ry = -100;
-  window.addEventListener('mousemove', (e) => {
-    mx = e.clientX; my = e.clientY;
-    dot.style.left = mx + 'px';
-    dot.style.top = my + 'px';
-  });
-  (function ringLoop() {
-    rx += (mx - rx) * 0.16;
-    ry += (my - ry) * 0.16;
-    ring.style.left = rx + 'px';
-    ring.style.top = ry + 'px';
-    requestAnimationFrame(ringLoop);
-  })();
-  const INTERACTIVE = 'a, button, .cmd-module, .about-tile, .inv-stage, .chat-chip, input, .folder-row';
-  document.addEventListener('mouseover', (e) => {
-    ring.classList.toggle('hover', !!e.target.closest(INTERACTIVE));
-  });
-  document.addEventListener('mouseleave', () => {
-    dot.classList.add('hidden');
-    ring.classList.add('hidden');
-  });
-  document.addEventListener('mouseenter', () => {
-    dot.classList.remove('hidden');
-    ring.classList.remove('hidden');
-  });
-}
+const DPR_CAP = PERF === 'high' ? 1.75 : PERF === 'medium' ? 1.25 : 1;
 
 /* ────────────────────────────── NAV ────────────────────────────── */
 function initNav() {
@@ -127,8 +66,7 @@ function initNav() {
     })
   );
 
-  // scroll spy
-  const spyObserver = new IntersectionObserver((entries) => {
+  const spy = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         links.querySelectorAll('a').forEach((l) =>
@@ -137,9 +75,9 @@ function initNav() {
       }
     });
   }, { rootMargin: '-40% 0px -55% 0px' });
-  ['world', 'property', 'ai', 'data', 'career', 'about', 'contact'].forEach((id) => {
+  ['work', 'property', 'ai', 'career', 'about', 'contact'].forEach((id) => {
     const el = document.getElementById(id);
-    if (el) spyObserver.observe(el);
+    if (el) spy.observe(el);
   });
 }
 
@@ -150,7 +88,7 @@ function initScrollChrome() {
   window.addEventListener('scroll', () => {
     const total = document.documentElement.scrollHeight - window.innerHeight;
     if (bar) bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
-    if (backTop) backTop.classList.toggle('show', window.scrollY > 480);
+    if (backTop) backTop.classList.toggle('show', window.scrollY > 520);
   }, { passive: true });
   if (backTop) backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 }
@@ -162,17 +100,16 @@ function initStats() {
     const key = el.dataset.stat;
     if (key === undefined || !(key in SITE_STATS)) return;
     const target = SITE_STATS[key];
-    const finalText = fmtStat(target);
-    el.dataset.final = finalText;
-    el.textContent = finalText; // no "0" flash — value is always correct
+    el.dataset.final = fmtStat(target);
+    el.textContent = fmtStat(target); // never shows 0
   });
-  if (mqReduced.matches) return; // no animation for reduced motion
+  if (mqReduced.matches) return;
 
-  function animateCount(el) {
-    const target = parseFloat(el.dataset.stat ? SITE_STATS[el.dataset.stat] : el.dataset.final.replace(/,/g, ''));
+  function animate(el) {
+    const target = parseFloat(SITE_STATS[el.dataset.stat]);
     const isInt = Number.isInteger(target);
     const finalText = el.dataset.final;
-    const dur = 1300;
+    const dur = 1200;
     const start = performance.now();
     function frame(now) {
       const p = Math.min((now - start) / dur, 1);
@@ -187,7 +124,7 @@ function initStats() {
   const obs = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        animateCount(entry.target);
+        animate(entry.target);
         obs.unobserve(entry.target);
       }
     });
@@ -195,12 +132,11 @@ function initStats() {
   els.forEach((el) => obs.observe(el));
 }
 
-/* ────────────────────────────── REVEAL ON SCROLL ────────────────────────────── */
+/* ────────────────────────────── REVEAL ────────────────────────────── */
 function initReveal() {
   const sel = [
-    '.stat-card', '.skill-card', '.pf-card', '.chart-card', '.contact-card',
-    '.section-head', '.pf-step', '.cmd-module', '.data-tile', '.about-tile',
-    '.mnote', '.station', '.inv-stage', '.geo-step', '.pf-chip',
+    '.cap-card', '.ps-card', '.chart-card', '.case-card', '.tl-item',
+    '.about-line', '.as-item', '.ai-step', '.ai-tools span', '.sec-head',
   ].join(',');
   const els = document.querySelectorAll(sel);
   if (!els.length) return;
@@ -216,24 +152,9 @@ function initReveal() {
     el.classList.add('reveal');
     obs.observe(el);
   });
-  // stagger
-  document.querySelectorAll('.pf-step, .data-tile, .about-tile, .mnote').forEach((el, i) => {
-    el.style.transitionDelay = (i % 4) * 0.07 + 's';
+  document.querySelectorAll('.cap-card, .ps-card, .tl-item, .case-card').forEach((el, i) => {
+    el.style.transitionDelay = (i % 3) * 0.07 + 's';
   });
-}
-
-/* ────────────────────────────── HERO PARALLAX (orbs) ────────────────────────────── */
-function initParallax() {
-  const orbs = document.querySelectorAll('.orb');
-  if (!orbs.length || !mqFine.matches || mqReduced.matches) return;
-  window.addEventListener('mousemove', (e) => {
-    const nx = e.clientX / window.innerWidth - 0.5;
-    const ny = e.clientY / window.innerHeight - 0.5;
-    orbs.forEach((o, i) => {
-      const d = (i + 1) * 14;
-      o.style.transform = `translate(${nx * d}px, ${ny * d}px)`;
-    });
-  }, { passive: true });
 }
 
 /* ────────────────────────────── MAGNETIC BUTTONS ────────────────────────────── */
@@ -242,13 +163,11 @@ function initMagnetic() {
   document.querySelectorAll('.magnetic').forEach((btn) => {
     btn.addEventListener('mousemove', (e) => {
       const r = btn.getBoundingClientRect();
-      const x = (e.clientX - r.left - r.width / 2) * 0.18;
-      const y = (e.clientY - r.top - r.height / 2) * 0.18;
+      const x = (e.clientX - r.left - r.width / 2) * 0.14;
+      const y = (e.clientY - r.top - r.height / 2) * 0.14;
       btn.style.transform = `translate(${x}px, ${y}px)`;
     });
-    btn.addEventListener('mouseleave', () => {
-      btn.style.transform = '';
-    });
+    btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
   });
 }
 
@@ -270,270 +189,179 @@ const R3D = {
   },
 };
 
-function buildSphere(radius, meridians, parallels) {
-  const lines = [];
-  for (let i = 0; i < meridians; i++) {
-    const lon = (i / meridians) * Math.PI * 2;
-    const pts = [];
-    for (let j = 0; j <= 40; j++) {
-      const lat = (j / 40) * Math.PI - Math.PI / 2;
-      pts.push([radius * Math.cos(lat) * Math.cos(lon), radius * Math.sin(lat), radius * Math.cos(lat) * Math.sin(lon)]);
-    }
-    lines.push(pts);
-  }
-  for (let i = 1; i < parallels; i++) {
-    const lat = (i / parallels) * Math.PI - Math.PI / 2;
-    const pts = [];
-    for (let j = 0; j <= 40; j++) {
-      const lon = (j / 40) * Math.PI * 2;
-      pts.push([radius * Math.cos(lat) * Math.cos(lon), radius * Math.sin(lat), radius * Math.cos(lat) * Math.sin(lon)]);
-    }
-    lines.push(pts);
-  }
-  const points = [];
-  const N = 80, phi = Math.PI * (3 - Math.sqrt(5));
-  for (let i = 0; i < N; i++) {
-    const y = 1 - (i / (N - 1)) * 2;
-    const r = Math.sqrt(1 - y * y);
-    const th = phi * i;
-    points.push([radius * r * Math.cos(th), radius * y, radius * r * Math.sin(th)]);
-  }
-  return { lines, points };
-}
-
-function buildCube(size) {
-  const h = size / 2;
+function buildBox(sizeX, sizeY, sizeZ) {
+  const hx = sizeX / 2, hy = sizeY / 2, hz = sizeZ / 2;
   const v = [
-    [-h, -h, -h], [h, -h, -h], [h, h, -h], [-h, h, -h],
-    [-h, -h, h], [h, -h, h], [h, h, h], [-h, h, h],
+    [-hx, -hy, -hz], [hx, -hy, -hz], [hx, hy, -hz], [-hx, hy, -hz],
+    [-hx, -hy, hz], [hx, -hy, hz], [hx, hy, hz], [-hx, hy, hz],
   ];
   const edges = [[0, 1], [1, 2], [2, 3], [3, 0], [4, 5], [5, 6], [6, 7], [7, 4], [0, 4], [1, 5], [2, 6], [3, 7]];
   return { v, edges };
 }
 
-function buildRing(radius, tiltX, tiltZ) {
-  const pts = [];
-  for (let i = 0; i <= 60; i++) {
-    const a = (i / 60) * Math.PI * 2;
-    let x = radius * Math.cos(a);
-    let y = radius * Math.sin(a) * 0.42;
-    let z = 0;
-    const cx = Math.cos(tiltX), sx = Math.sin(tiltX);
-    let y2 = y * cx - z * sx, z2 = y * sx + z * cx;
-    y = y2; z = z2;
-    const cz = Math.cos(tiltZ), sz = Math.sin(tiltZ);
-    const x2 = x * cz - y * sz, y3 = x * sz + y * cz;
-    pts.push([x2, y3, z]);
-  }
-  return pts;
-}
-
-function drawWireframe(ctx, pts, color, alphaBase) {
-  ctx.beginPath();
-  ctx.moveTo(pts[0][0], pts[0][1]);
-  for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1;
-  ctx.globalAlpha = alphaBase;
-  ctx.stroke();
-}
-
-/* ── Particle network + 3D command-core background ── */
-(function initBackground() {
-  const canvas = document.getElementById('particles');
+/* ── "PROPERTY INTELLIGENCE" city grid (fixed background) ── */
+(function initCityGrid() {
+  const canvas = document.getElementById('cityGrid');
   if (!canvas || PERF === 'low') return;
   const ctx = canvas.getContext('2d');
-  let w, h, particles = [];
-  const COLORS = ['#59d8ff', '#00e5a0', '#6ea8ff', '#ffb454', '#8b7cf6'];
-  const COUNT = PERF === 'medium' ? 26 : 55;
-  const LINK_DIST = 130;
-  let time = 0;
-  let mouseNX = 0, mouseNY = 0, mouseTX = 0, mouseTY = 0;
-  window.addEventListener('mousemove', (e) => {
-    mouseTX = (e.clientX / window.innerWidth) * 2 - 1;
-    mouseTY = (e.clientY / window.innerHeight) * 2 - 1;
-  }, { passive: true });
+  let w, h, time = 0;
+  let mx = 0, my = 0, tx = 0, ty = 0;
+  const DPR = Math.min(window.devicePixelRatio || 1, DPR_CAP);
 
-  function resize() {
-    const dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
-    w = canvas.width = window.innerWidth * dpr;
-    h = canvas.height = window.innerHeight * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    w = window.innerWidth; h = window.innerHeight;
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  function Particle() {
-    this.x = Math.random() * w;
-    this.y = Math.random() * h;
-    this.vx = (Math.random() - 0.5) * 0.5;
-    this.vy = (Math.random() - 0.5) * 0.5;
-    this.r = Math.random() * 2 + 1;
-    this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
-  }
-  for (let i = 0; i < COUNT; i++) particles.push(new Particle());
-
-  const globe = buildSphere(150, 12, 8);
-  const rings = [buildRing(225, 0.5, 0.2), buildRing(270, -0.35, 0.6)];
-  const cubes = [];
-  const cubeCount = PERF === 'medium' ? 3 : 5;
-  for (let i = 0; i < cubeCount; i++) {
-    cubes.push({
-      c: buildCube(24 + Math.random() * 30),
-      x: (Math.random() - 0.5) * 900,
-      y: (Math.random() - 0.5) * 600,
-      z: (Math.random() - 0.5) * 300,
-      ry: Math.random() * Math.PI,
-      rx: Math.random() * Math.PI,
-      speed: 0.002 + Math.random() * 0.004,
-      color: ['#59d8ff', '#6ea8ff', '#00e5a0', '#ffb454', '#8b7cf6'][i % 5],
-      size: 0.6 + Math.random() * 0.9,
+  const N = PERF === 'medium' ? 26 : 42;
+  const blocks = [];
+  for (let i = 0; i < N; i++) {
+    const size = 26 + Math.random() * 46;
+    blocks.push({
+      geo: buildBox(size, size * (0.6 + Math.random() * 1.8), size),
+      x: (Math.random() - 0.5) * 520,
+      z: (Math.random() - 0.5) * 520,
+      ry: Math.random() * Math.PI * 2,
+      speed: 0.0004 + Math.random() * 0.0012,
+      h: 0.5 + Math.random() * 0.5,
     });
   }
+  // data points (location nodes)
+  const nodes = [];
+  for (let i = 0; i < 26; i++) {
+    nodes.push({
+      x: (Math.random() - 0.5) * 560,
+      y: (Math.random() - 0.5) * 180,
+      z: (Math.random() - 0.5) * 560,
+      r: 1.2 + Math.random() * 1.6,
+      accent: Math.random() < 0.4,
+    });
+  }
+  // connecting lines between nearby nodes
+  const links = [];
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const dx = nodes[i].x - nodes[j].x;
+      const dy = nodes[i].y - nodes[j].y;
+      const dz = nodes[i].z - nodes[j].z;
+      if (dx * dx + dy * dy + dz * dz < 260 * 260) links.push([i, j]);
+    }
+  }
+
+  function resize() {
+    w = window.innerWidth;
+    h = window.innerHeight;
+    canvas.width = Math.round(w * DPR);
+    canvas.height = Math.round(h * DPR);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  window.addEventListener('mousemove', (e) => {
+    tx = (e.clientX / w - 0.5) * 2;
+    ty = (e.clientY / h - 0.5) * 2;
+  }, { passive: true });
+
+  let visible = true;
+  document.addEventListener('visibilitychange', () => {
+    visible = !document.hidden;
+    if (visible) requestAnimationFrame(tick);
+  });
+
+  const rotY = PERF === 'medium' ? 0.12 : 0.22; // very slow
 
   function tick() {
-    time += 0.005;
-    mouseNX += (mouseTX - mouseNX) * 0.03;
-    mouseNY += (mouseTY - mouseNY) * 0.03;
+    if (!visible) return;
+    time += 0.0016;
+    mx += (tx - mx) * 0.02;
+    my += (ty - my) * 0.02;
     ctx.clearRect(0, 0, w, h);
 
-    // 3D globe (right side)
-    const gx = w * 0.82 + mouseNX * 36;
-    const gy = h * 0.3 + mouseNY * 24;
-    const globeScale = Math.min(w, h) / 900 + 0.75;
-    const fov = 500;
-    const rotY = time * 1.2;
-    const rotX = Math.sin(time * 0.6) * 0.25;
+    const cx = w / 2 + mx * 14;
+    const cy = h * 0.44 + my * 10;
+    const fov = 620;
+    const camY = rotY * Math.sin(time * 0.35) + 0.55;
 
-    const halo = ctx.createRadialGradient(gx, gy, 0, gx, gy, 260 * globeScale);
-    halo.addColorStop(0, 'rgba(110,168,255,0.16)');
-    halo.addColorStop(0.6, 'rgba(89,216,255,0.07)');
-    halo.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = halo;
-    ctx.beginPath();
-    ctx.arc(gx, gy, 260 * globeScale, 0, Math.PI * 2);
-    ctx.fill();
-
-    for (let ri = 0; ri < rings.length; ri++) {
-      const ring = rings[ri];
-      const proj = [];
-      let avgScale = 0;
-      for (const p of ring) {
-        let [x, y, z] = R3D.rotY(p[0], p[1], p[2], rotY * (ri === 0 ? 0.8 : -0.5));
-        [x, y, z] = R3D.rotX(x, y, z, rotX);
-        const [sx, sy, sc] = R3D.project(x * globeScale, y * globeScale, z * globeScale, fov, gx, gy);
-        proj.push([sx, sy]);
-        avgScale += sc;
-      }
-      avgScale /= ring.length;
-      drawWireframe(ctx, proj, ri === 0 ? '#59d8ff' : '#00e5a0', 0.2 + avgScale * 0.4);
+    // data links (thin lines)
+    ctx.lineWidth = 1;
+    for (const [a, b] of links) {
+      const pa = nodes[a], pb = nodes[b];
+      let [ax, ay, az] = R3D.rotY(pa.x, pa.y, pa.z, camY);
+      let [bx, by, bz] = R3D.rotY(pb.x, pb.y, pb.z, camY);
+      const s1 = R3D.project(ax, ay, az, fov, cx, cy);
+      const s2 = R3D.project(bx, by, bz, fov, cx, cy);
+      ctx.beginPath();
+      ctx.moveTo(s1[0], s1[1]);
+      ctx.lineTo(s2[0], s2[1]);
+      ctx.strokeStyle = pa.accent || pb.accent
+        ? 'rgba(198,240,78,0.10)'
+        : 'rgba(255,255,255,0.05)';
+      ctx.stroke();
     }
 
-    for (const line of globe.lines) {
-      const proj = [];
-      let avgScale = 0;
-      for (const p of line) {
-        let [x, y, z] = R3D.rotY(p[0], p[1], p[2], rotY);
-        [x, y, z] = R3D.rotX(x, y, z, rotX);
-        const [sx, sy, sc] = R3D.project(x * globeScale, y * globeScale, z * globeScale, fov, gx, gy);
-        proj.push([sx, sy]);
-        avgScale += sc;
-      }
-      avgScale /= line.length;
-      drawWireframe(ctx, proj, '#6ea8ff', 0.2 + avgScale * 0.42);
-    }
-
-    for (const p of globe.points) {
-      let [x, y, z] = R3D.rotY(p[0], p[1], p[2], rotY);
-      [x, y, z] = R3D.rotX(x, y, z, rotX);
-      const [sx, sy, sc] = R3D.project(x * globeScale, y * globeScale, z * globeScale, fov, gx, gy);
-      if (sc > 0.55) {
-        ctx.beginPath();
-        ctx.arc(sx, sy, 2.1 * sc, 0, Math.PI * 2);
-        ctx.fillStyle = '#00e5a0';
-        ctx.globalAlpha = 0.8 * sc;
-        ctx.fill();
-      }
-    }
-    ctx.globalAlpha = 1;
-
-    for (const cube of cubes) {
-      cube.ry += cube.speed;
-      cube.rx += cube.speed * 0.7;
+    // city blocks (wireframe, calm)
+    for (const b of blocks) {
+      b.ry += b.speed;
       const pts = [];
       let sumScale = 0;
-      for (const v of cube.c.v) {
-        let [x, y, z] = R3D.rotY(v[0], v[1], v[2], cube.ry);
-        [x, y, z] = R3D.rotX(x, y, z, cube.rx);
-        x += cube.x; y += cube.y; z += cube.z;
-        const [sx, sy, sc] = R3D.project(x * cube.size, y * cube.size, z * cube.size, fov, w / 2, h / 2);
+      for (const v of b.geo.v) {
+        let [x, y, z] = R3D.rotY(v[0], v[1], v[2], b.ry);
+        x += b.x; y += 0; z += b.z;
+        let [rx, ry, rz] = R3D.rotY(x, y, z, camY);
+        const [sx, sy, sc] = R3D.project(rx * b.h, ry * b.h, rz * b.h, fov, cx, cy);
         pts.push([sx, sy]);
         sumScale += sc;
       }
-      const alpha = 0.18 + (sumScale / 8) * 0.45;
-      for (const [a, b] of cube.c.edges) {
+      const alpha = 0.10 + (sumScale / 8) * 0.22;
+      for (const [e1, e2] of b.geo.edges) {
         ctx.beginPath();
-        ctx.moveTo(pts[a][0], pts[a][1]);
-        ctx.lineTo(pts[b][0], pts[b][1]);
-        ctx.strokeStyle = cube.color;
+        ctx.moveTo(pts[e1][0], pts[e1][1]);
+        ctx.lineTo(pts[e2][0], pts[e2][1]);
+        ctx.strokeStyle = 'rgba(255,255,255,0.5)';
         ctx.globalAlpha = alpha;
-        ctx.lineWidth = 1.2;
+        ctx.lineWidth = 1;
         ctx.stroke();
       }
-    }
-    ctx.globalAlpha = 1;
-
-    for (const p of particles) {
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0 || p.x > w) p.vx *= -1;
-      if (p.y < 0 || p.y > h) p.vy *= -1;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = p.color;
-      ctx.globalAlpha = 0.7;
-      ctx.fill();
-    }
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const a = particles[i], b = particles[j];
-        const dx = a.x - b.x, dy = a.y - b.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < LINK_DIST) {
+      // accent roof dot on some blocks
+      if (b.h > 1.1) {
+        const top = R3D.rotY(b.x, b.geo.v[6][1] * b.h, b.z, camY);
+        const [sx, sy, sc] = R3D.project(top[0], top[1], top[2], fov, cx, cy);
+        if (sc > 0.3) {
           ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = a.color;
-          ctx.globalAlpha = (1 - dist / LINK_DIST) * 0.28;
-          ctx.lineWidth = 1;
-          ctx.stroke();
+          ctx.arc(sx, sy, 1.6 * sc, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(198,240,78,0.5)';
+          ctx.globalAlpha = 0.35;
+          ctx.fill();
         }
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    // data points
+    for (const p of nodes) {
+      let [x, y, z] = R3D.rotY(p.x, p.y, p.z, camY);
+      const [sx, sy, sc] = R3D.project(x, y, z, fov, cx, cy);
+      if (sc > 0.4) {
+        ctx.beginPath();
+        ctx.arc(sx, sy, p.r * sc, 0, Math.PI * 2);
+        ctx.fillStyle = p.accent ? 'rgba(198,240,78,0.75)' : 'rgba(255,255,255,0.5)';
+        ctx.globalAlpha = 0.5 * sc;
+        ctx.fill();
       }
     }
     ctx.globalAlpha = 1;
     requestAnimationFrame(tick);
   }
-  tick();
+  requestAnimationFrame(tick);
 })();
 
-/* ────────────────────────────── COMMAND CENTER ────────────────────────────── */
-function initCommand() {
-  document.querySelectorAll('.cmd-module').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const target = document.querySelector(btn.dataset.target);
-      if (target) target.scrollIntoView({ behavior: 'smooth' });
-    });
-  });
-  const core = document.querySelector('.cmd-core');
-  if (core) {
-    core.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        const target = document.getElementById('property');
-        if (target) target.scrollIntoView({ behavior: 'smooth' });
-      }
-    });
-  }
+/* ────────────────────────────── PORTRAIT PARALLAX ────────────────────────────── */
+function initPortraitParallax() {
+  const visual = document.querySelector('.hero-visual');
+  if (!visual || !mqFine.matches || mqReduced.matches) return;
+  const frame = visual.querySelector('.portrait-frame');
+  window.addEventListener('mousemove', (e) => {
+    const nx = e.clientX / window.innerWidth - 0.5;
+    const ny = e.clientY / window.innerHeight - 0.5;
+    if (frame) frame.style.transform = `rotateY(${nx * 5}deg) rotateX(${-ny * 4}deg)`;
+    visual.style.transform = `translate(${nx * 6}px, ${ny * 6}px)`;
+  }, { passive: true });
 }
 
 /* ────────────────────────────── UK MAP ────────────────────────────── */
@@ -543,43 +371,42 @@ function initMap() {
   if (!svg || !tip) return;
 
   const POINTS = [
-    { name: 'Liverpool', x: 108, y: 276, note: 'L postcodes · 79 towns', detail: 'City Centre 150 · Toxteth 54 · Everton 25 · Walton 24' },
-    { name: 'Wirral', x: 96, y: 288, note: 'Deep analysis', detail: 'Wirral Deep Analysis Final · 04.07.2026' },
-    { name: '10-Mile Radius', x: 120, y: 262, note: 'Matched properties', detail: 'Liverpool 10-mile radius matched workbook' },
-    { name: 'London E1', x: 170, y: 348, note: '53 properties', detail: '40-min commute band · standard sale BRRR' },
-    { name: 'Grays', x: 182, y: 344, note: 'RM17 · freehold', detail: '10-property comparison · max-offer maths' },
+    { name: 'Liverpool', x: 108, y: 276, labelSide: 'r', note: 'L postcodes · 79 towns', detail: 'City Centre 150 · Toxteth 54 · Everton 25 · Walton 24' },
+    { name: 'Wirral', x: 96, y: 288, labelSide: 'r', note: 'Deep analysis', detail: 'Wirral Deep Analysis · 04.07.2026' },
+    { name: '10-Mile Radius', x: 120, y: 262, labelSide: 'l', labelX: -18, note: 'Matched properties', detail: 'Liverpool 10-mile matched workbook' },
+    { name: 'London E1', x: 170, y: 348, labelSide: 'r', labelX: 16, note: '53 properties', detail: '40-min commute band · standard sale BRRR' },
+    { name: 'Grays', x: 190, y: 352, labelSide: 'l', labelX: -16, note: 'RM17 · freehold', detail: '10-property comparison · max-offer maths' },
   ];
 
   const dotsG = document.getElementById('mapDots');
   const labelsG = document.getElementById('mapLabels');
 
   POINTS.forEach((pt) => {
-    // halo pulse
-    const halo = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    halo.setAttribute('cx', pt.x); halo.setAttribute('cy', pt.y); halo.setAttribute('r', 16);
-    halo.setAttribute('fill', 'url(#dotGlow)');
-    halo.setAttribute('class', 'pulse-dot-svg');
-    // core dot
     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     g.setAttribute('class', 'map-dot');
     g.setAttribute('tabindex', '0');
     g.setAttribute('role', 'button');
     g.setAttribute('aria-label', pt.name + ' — ' + pt.note);
+    const halo = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    halo.setAttribute('cx', pt.x); halo.setAttribute('cy', pt.y); halo.setAttribute('r', 13);
+    halo.setAttribute('fill', 'rgba(198,240,78,0.12)');
     const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    dot.setAttribute('cx', pt.x); dot.setAttribute('cy', pt.y); dot.setAttribute('r', 6);
-    dot.setAttribute('fill', '#59d8ff');
-    dot.setAttribute('stroke', '#0a0c13'); dot.setAttribute('stroke-width', '2');
+    dot.setAttribute('cx', pt.x); dot.setAttribute('cy', pt.y); dot.setAttribute('r', 5);
+    dot.setAttribute('fill', '#c6f04e');
+    dot.setAttribute('stroke', '#0a0b0d'); dot.setAttribute('stroke-width', '1.5');
+    g.appendChild(halo);
     g.appendChild(dot);
-    dotsG.appendChild(halo);
     dotsG.appendChild(g);
 
     const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    label.setAttribute('x', pt.x + 12); label.setAttribute('y', pt.y + 4);
     label.setAttribute('class', 'map-label');
+    label.setAttribute('x', pt.labelSide === 'r' ? pt.x + (pt.labelX || 12) : pt.x - (pt.labelX ? -pt.labelX : 10));
+    label.setAttribute('y', pt.y + 4);
+    label.setAttribute('text-anchor', pt.labelSide === 'r' ? 'start' : 'end');
     label.textContent = pt.name;
     labelsG.appendChild(label);
 
-    const show = (ev) => {
+    const show = () => {
       tip.hidden = false;
       tip.innerHTML = '<b>' + pt.name + '</b><span>' + pt.note + ' · ' + pt.detail + '</span>';
       const rect = svg.getBoundingClientRect();
@@ -596,353 +423,13 @@ function initMap() {
     g.addEventListener('click', show);
   });
 
-  // add label styles
   const style = document.createElement('style');
-  style.textContent = '.map-label { fill:#6b7288; font-size:10px; font-family:Poppins,sans-serif; letter-spacing:.08em; pointer-events:none; }';
+  style.textContent = '.map-label { fill:#9aa39a; font-size:9.5px; font-family:Inter,sans-serif; letter-spacing:.06em; pointer-events:none; }';
   document.head.appendChild(style);
 }
 
-/* ────────────────────────────── INVESTMENT FLOW ────────────────────────────── */
-function initInvFlow() {
-  const stages = document.querySelectorAll('.inv-stage');
-  const detail = document.getElementById('invDetail');
-  if (!stages.length || !detail) return;
-
-  const DATA = [
-    { t: 'SOURCE', d: 'Finding opportunities across Rightmove, auction portals and PropertyData exports — 3,589 listings scanned into the pipeline.', tags: ['Rightmove', 'Auction portals', 'PropertyData'] },
-    { t: 'SCREEN', d: 'Buy-box filters: freehold, 2–3 beds, price band, postcode. 3,589 → 2,386 unique postcodes → 2,573 target properties.', tags: ['Tenure', 'Bed count', 'Price band'] },
-    { t: 'ANALYSE', d: 'DUV reverse-engineered from sold comparables, refurb cost build-up, 50% bridge / 50% cash financing. Max Offer = DUV − Refurb − Buying Costs, capped at asking price.', tags: ['DUV', 'ARV', 'Max Offer'] },
-    { t: 'DUE DILIGENCE', d: 'Legal pack review, EWS1, leasehold terms, SDLT and solicitor cross-check. 87 properties carried into deep analysis.', tags: ['Legal pack', 'EWS1', 'SDLT'] },
-    { t: 'REFURB', d: 'Refurbishment tiering and cost verification — every cost line cross-checked against a sourced evidence base.', tags: ['Refurb tiers', 'Cost evidence'] },
-    { t: 'BRRR', d: 'Buy-Refurb-Rent-Refinance. Hold strategy — no profit deduction, exit via refinance at post-refurb value.', tags: ['Hold strategy', 'Refi exit'] },
-    { t: 'REFINANCE', d: 'Post-refurb valuation and refinance maths — capital recycled into the next deal. 12 biddable · 2 deals completed.', tags: ['Post-refurb value', 'Capital recycling'] },
-  ];
-
-  function render(idx) {
-    stages.forEach((s, i) => s.classList.toggle('active', i === idx));
-    const d = DATA[idx];
-    detail.innerHTML =
-      '<h3>' + d.t + '</h3><div><p>' + d.d + '</p><div class="inv-tags">' +
-      d.tags.map((t) => '<span>' + t + '</span>').join('') + '</div></div>';
-  }
-  stages.forEach((s, i) => s.addEventListener('click', () => render(i)));
-  render(0);
-}
-
-/* ────────────────────────────── AI CHAT (local knowledge engine) ────────────────────────────── */
-function initAI() {
-  const log = document.getElementById('chatLog');
-  const form = document.getElementById('chatForm');
-  const input = document.getElementById('chatInput');
-  const suggests = document.getElementById('chatSuggests');
-  if (!log || !form || !input) return;
-
-  const KB = [
-    { k: ['specialise', 'specialize', 'what does', 'expert', 'focus', 'about fayzur'], a: 'Fayzur operates at the intersection of PROPERTY × AI × RESEARCH × SALES — UK property sourcing, BRRR/BMV analysis, auction due diligence, data research, AI automation and commercial sales.' },
-    { k: ['property', 'experience'], a: 'He is Operations & Research Lead to MD at BricksBuilder.co.uk (May 2026 – present): 3,589 properties screened, 2,386 unique postcodes, 2,573 target properties, 350 auction lots and 2 deals completed. Coverage: Liverpool & Wirral, London E1 and Grays.' },
-    { k: ['achievement', 'strong', 'best', 'result', 'accomplish', 'impressive'], a: 'Three standouts: BDT 12.78Cr Samsung electronics sales (3 years), BDT 2.37Cr Isho Furniture showroom sales (454 orders, 20 months), and an AI-augmented screening pipeline that cut time per property from 165min to 55min (−67%).' },
-    { k: ['ai', 'tool', 'automation', 'llm', 'agent', 'tech'], a: 'OpenClaw, AutoClaw, Hermes Agent, LLMs, Chrome CDP automation, prompt engineering and workflow automation — used to run a real property pipeline: scraper → dedupe → screen → rank → audit engine.' },
-    { k: ['brrr', 'refurb', 'refinance', 'bmv', 'duv', 'formula', 'model'], a: 'BRRR = Buy-Refurb-Rent-Refinance. His formula: Max Offer = DUV − Refurb − Buying Costs, capped at asking price, 50% bridge / 50% cash financing, hold strategy with refinance exit. DUV comes from sold comparables — no fantasy figures.' },
-    { k: ['hire', 'why', 'candidate', 'value', 'strength', 'work with'], a: '11+ years of commercial sales, a verified BDT 15Cr+ track record, deep UK property research capability and an AI-first workflow — an operator who turns data into decisions, not a generic researcher.' },
-    { k: ['contact', 'email', 'phone', 'reach', 'linkedin'], a: 'Email sense060994@gmail.com · Phone +880 1795-913204 · LinkedIn /in/fayzur0609 · GitHub fayzur060994.' },
-    { k: ['screening', 'pipeline', 'screened', 'postcode', 'number'], a: '3,589 raw listings (PropertyData + Rightmove + auctions) → 2,386 unique postcodes → 2,573 two–three-bed targets → 87 deep analyses → 31 leads · 12 biddable → 2 deals completed.' },
-    { k: ['timeline', 'career', 'job', 'work history', 'companies'], a: 'Jadroo (2019–20, Business Development) → Samsung (2021–23, 12.78Cr) → Asian Paints (2023–24, APEC) → Isho (2024–26, 2.37Cr) → BricksBuilder (2026–, Research Lead). Earlier: BNMKS Territory Sales Officer (2016–18).' },
-    { k: ['skill', 'expertise', 'capab', 'good at'], a: 'PROPERTY: BRRR, BMV, sourcing, auction analysis, due diligence, refurb analysis. DATA: Excel, research, analytics, reporting. AI: LLMs, agents, automation, workflow design. COMMERCIAL: sales, negotiation, business development, account management.' },
-  ];
-
-  function answer(q) {
-    const ql = q.toLowerCase();
-    let best = null, bestScore = 0;
-    KB.forEach((entry) => {
-      const score = entry.k.reduce((s, kw) => s + (ql.includes(kw) ? 1 : 0), 0);
-      if (score > bestScore) { best = entry; bestScore = score; }
-    });
-    return best
-      ? best.a
-      : "I'm a local knowledge engine over Fayzur's verified portfolio. I can answer about his property work, AI tools, career, achievements and contact — try one of the suggested prompts.";
-  }
-
-  function addMsg(text, who) {
-    const row = document.createElement('div');
-    row.className = 'chat-msg ' + who;
-    row.innerHTML = '<span class="chat-avatar">' + (who === 'bot' ? '◆' : 'F') + '</span><div class="chat-bubble"></div>';
-    row.querySelector('.chat-bubble').textContent = text;
-    log.appendChild(row);
-    log.scrollTop = log.scrollHeight;
-    return row;
-  }
-
-  function ask(q) {
-    if (!q.trim()) return;
-    addMsg(q, 'user');
-    input.value = '';
-    const typing = addMsg('', 'bot');
-    typing.classList.add('typing');
-    const t0 = performance.now();
-    const tick = (now) => {
-      const p = (now - t0) / 600;
-      if (p < 1) requestAnimationFrame(tick);
-      else {
-        typing.classList.remove('typing');
-        typing.querySelector('.chat-bubble').textContent = answer(q);
-        log.scrollTop = log.scrollHeight;
-      }
-    };
-    requestAnimationFrame(tick);
-  }
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    ask(input.value);
-  });
-  suggests.addEventListener('click', (e) => {
-    if (e.target.classList.contains('chat-chip')) ask(e.target.textContent);
-  });
-}
-
-/* ────────────────────────────── NODE GRAPHS (AI network + skills) ────────────────────────────── */
-function initNodeGraph(canvasId, fallbackId, graph, opts) {
-  const cv = document.getElementById(canvasId);
-  if (!cv) return;
-  const fb = document.getElementById(fallbackId);
-  if (PERF === 'low' || mqCoarse.matches) {
-    cv.style.display = 'none';
-    if (fb) fb.style.display = 'flex';
-    return;
-  }
-  const ctx = cv.getContext('2d');
-  const reduced = mqReduced.matches;
-  let W = 0, H = 0, anim = 0, raf = null, visible = false;
-  let hover = -1;
-
-  const nodes = [];   // {x,y,r,label,desc,kind,hub,ox,oy,phase}
-  const edges = [];   // [aIndex, bIndex, hubToHub]
-
-  graph.hubs.forEach((h, hi) => {
-    const hubIdx = nodes.length;
-    nodes.push({ x: h.x, y: h.y, r: h.r || 17, label: h.label, desc: h.desc, kind: 'hub', ox: h.x, oy: h.y, phase: hi });
-    h.leaves.forEach((leaf, li) => {
-      const total = h.leaves.length;
-      const ang = (Math.PI * 2 * li) / total + (h.offset || 0);
-      const dist = h.leafDist || 0.17;
-      nodes.push({
-        x: h.x + Math.cos(ang) * dist,
-        y: h.y + Math.sin(ang) * dist,
-        r: 5, label: leaf.label, desc: leaf.desc, kind: 'leaf',
-        hub: hubIdx, ox: h.x + Math.cos(ang) * dist, oy: h.y + Math.sin(ang) * dist,
-        phase: li,
-      });
-      edges.push([hubIdx, nodes.length - 1, false]);
-    });
-  });
-  (graph.hubLinks || []).forEach(([a, b]) => edges.push([a, b, true]));
-
-  function resize() {
-    const dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
-    W = cv.clientWidth || 600;
-    H = cv.clientHeight || 320;
-    cv.width = W * dpr;
-    cv.height = H * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  function wrap(text, maxW) {
-    const words = text.split(' ');
-    const lines = [];
-    let line = '';
-    words.forEach((wd) => {
-      if ((line + ' ' + wd).trim().length > maxW) { lines.push(line.trim()); line = wd; }
-      else line += ' ' + wd;
-    });
-    if (line.trim()) lines.push(line.trim());
-    return lines;
-  }
-
-  function nodeAt(mx, my) {
-    for (let i = nodes.length - 1; i >= 0; i--) {
-      const n = nodes[i];
-      const dx = n.x * W - mx, dy = n.y * H - my;
-      if (Math.sqrt(dx * dx + dy * dy) < Math.max(n.r + 10, 22)) return i;
-    }
-    return -1;
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-
-    // edges
-    edges.forEach(([ai, bi, hubToHub]) => {
-      const a = nodes[ai], b = nodes[bi];
-      const linked = hover === ai || hover === bi || (hover >= 0 && (nodes[hover].hub === ai || nodes[hover].hub === bi));
-      ctx.beginPath();
-      ctx.moveTo(a.x * W, a.y * H);
-      ctx.lineTo(b.x * W, b.y * H);
-      ctx.strokeStyle = linked
-        ? 'rgba(89,216,255,0.55)'
-        : hubToHub ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)';
-      ctx.lineWidth = linked ? 1.6 : 1;
-      ctx.stroke();
-    });
-
-    // hub-hub ring
-    if (graph.hubLinks) {
-      // subtle outer ring connecting hubs
-    }
-
-    nodes.forEach((n, i) => {
-      const px = n.x * W, py = n.y * H;
-      const pulse = reduced ? 0 : Math.sin(anim * 2 + n.phase) * 0.12;
-      if (n.kind === 'hub') {
-        const r = n.r * (1 + pulse * 0.4);
-        const grad = ctx.createRadialGradient(px, py, 0, px, py, r * 3);
-        grad.addColorStop(0, 'rgba(110,168,255,0.28)');
-        grad.addColorStop(1, 'rgba(110,168,255,0)');
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(px, py, r * 3, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(px, py, r, 0, Math.PI * 2);
-        ctx.fillStyle = hover === i ? '#59d8ff' : '#1a2236';
-        ctx.fill();
-        ctx.strokeStyle = hover === i ? '#7ce2ff' : 'rgba(110,168,255,0.7)';
-        ctx.lineWidth = 1.6;
-        ctx.stroke();
-
-        ctx.font = '700 11px "Space Grotesk", sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillStyle = '#e9ecf4';
-        ctx.fillText(n.label, px, py + 4);
-      } else {
-        const r = n.r * (1 + pulse);
-        ctx.beginPath();
-        ctx.arc(px, py, r, 0, Math.PI * 2);
-        ctx.fillStyle = hover === i || hover === n.hub ? '#00e5a0' : '#6b7288';
-        ctx.fill();
-        if (hover === i) {
-          ctx.font = '600 10px Poppins, sans-serif';
-          ctx.textAlign = 'left';
-          ctx.fillStyle = '#98a0b6';
-          ctx.fillText(n.label, px + 10, py + 4);
-        }
-      }
-    });
-
-    // tooltip
-    if (hover >= 0) {
-      const n = nodes[hover];
-      const px = n.x * W, py = n.y * H;
-      const lines = wrap((n.label + ' — ' + n.desc), 34);
-      const tw = 210, th = lines.length * 16 + 20;
-      let bx = px + 16, by = py - th - 8;
-      if (bx + tw > W - 8) bx = px - tw - 16;
-      if (by < 8) by = py + 20;
-      ctx.fillStyle = 'rgba(10,12,19,0.94)';
-      ctx.strokeStyle = 'rgba(89,216,255,0.4)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.roundRect(bx, by, tw, th, 10);
-      ctx.fill();
-      ctx.stroke();
-      ctx.font = '600 11px Poppins, sans-serif';
-      ctx.textAlign = 'left';
-      ctx.fillStyle = '#59d8ff';
-      ctx.fillText(n.label, bx + 12, by + 18);
-      ctx.font = '400 10.5px Poppins, sans-serif';
-      ctx.fillStyle = '#98a0b6';
-      lines.forEach((ln, li) => ctx.fillText(ln, bx + 12, by + 34 + li * 15));
-    }
-
-    if (!reduced) anim += 0.016;
-  }
-
-  function loop() {
-    if (!visible) return;
-    draw();
-    raf = requestAnimationFrame(loop);
-  }
-
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        if (!visible) { visible = true; raf = requestAnimationFrame(loop); }
-      } else {
-        visible = false;
-        if (raf) cancelAnimationFrame(raf);
-      }
-    });
-  }, { threshold: 0.15 });
-  obs.observe(cv);
-
-  cv.addEventListener('mousemove', (e) => {
-    const r = cv.getBoundingClientRect();
-    hover = nodeAt(e.clientX - r.left, e.clientY - r.top);
-  });
-  cv.addEventListener('mouseleave', () => { hover = -1; });
-  cv.addEventListener('focus', () => { hover = 0; draw(); });
-  cv.addEventListener('blur', () => { hover = -1; draw(); });
-
-  if (reduced) {
-    visible = true;
-    draw();
-  }
-}
-
-/* AI network graph */
-
-/* ────────────────────────────── JOURNEY (career) ────────────────────────────── */
-function initJourney() {
-  const track = document.getElementById('journeyTrack');
-  const prev = document.getElementById('jcPrev');
-  const next = document.getElementById('jcNext');
-  const count = document.getElementById('jcCount');
-  if (!track) return;
-  const STEP = 322;
-
-  function updateCount() {
-    if (!count) return;
-    const idx = Math.min(Math.max(Math.round(track.scrollLeft / STEP), 0), 5);
-    count.textContent = '0' + (idx + 1) + ' / 06';
-  }
-  track.addEventListener('scroll', updateCount, { passive: true });
-  if (prev) prev.addEventListener('click', () => track.scrollBy({ left: -STEP, behavior: 'smooth' }));
-  if (next) next.addEventListener('click', () => track.scrollBy({ left: STEP, behavior: 'smooth' }));
-  updateCount();
-}
-
-/* ────────────────────────────── ABOUT TILES ────────────────────────────── */
-function initAboutTiles() {
-  const tiles = document.querySelectorAll('.about-tile');
-  const INFO = [
-    'Investment research and sourcing — BRRR, BMV, auction analysis, due diligence across 2,386 unique postcodes.',
-    'PropertyData research, Excel models, analytics and reporting — every decision backed by verifiable data.',
-    'Automation and agents — OpenClaw, AutoClaw, Hermes, LLMs and workflow automation running a real screening pipeline.',
-    'Commercial performance — BDT 15Cr+ combined sales across Samsung and Isho, high-ticket closing and negotiation.',
-    'Operational thinking — from showroom floor to research lead: systems, reporting and cross-timezone delivery.',
-  ];
-  tiles.forEach((t, i) => {
-    t.addEventListener('click', () => {
-      tiles.forEach((x) => x.classList.remove('active'));
-      t.classList.add('active');
-      const bio = document.querySelector('.about-bio');
-      if (bio) {
-        const p = document.createElement('p');
-        p.textContent = INFO[i];
-        p.style.cssText = 'border-left:3px solid var(--ice);padding-left:12px;color:var(--text);';
-        const old = bio.querySelector('.tile-note');
-        if (old) old.remove();
-        p.classList.add('tile-note');
-        bio.appendChild(p);
-      }
-    });
-  });
-}
-
 /* ═══════════════════════════════════════════
-   3D CHARTS (vanilla engine, preserved)
+   3D CHARTS (vanilla engine)
    ═══════════════════════════════════════════ */
 function shadeHex(hex, amt) {
   const n = parseInt(hex.slice(1), 16);
@@ -971,7 +458,7 @@ function boxFaces(cx, cy, cz, w, h, d, color, cam, ox, oy) {
   const faces = [
     { idx: [0, 1, 2, 3], color: shadeHex(color, -42) },
     { idx: [4, 5, 6, 7], color: color },
-    { idx: [0, 1, 5, 4], color: shadeHex(color, 42) },
+    { idx: [0, 1, 5, 4], color: shadeHex(color, 40) },
     { idx: [1, 2, 6, 5], color: shadeHex(color, -18) },
   ];
   return faces.map((f) => ({
@@ -1001,7 +488,6 @@ const easeOut = (p) => 1 - Math.pow(1 - p, 3);
 
 function init3DCharts() {
   const charts = [
-    { id: 'chartBars', draw: draw3DBars },
     { id: 'chartFunnel', draw: draw3DFunnel },
     { id: 'chartLine', draw: draw3DLine },
   ];
@@ -1014,7 +500,7 @@ function init3DCharts() {
     const sizeCanvas = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
       const w = cv.clientWidth || 300;
-      const h = cv.clientHeight || 230;
+      const h = cv.clientHeight || 240;
       cv.width = Math.round(w * dpr);
       cv.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -1027,7 +513,7 @@ function init3DCharts() {
       if (t0 === null) t0 = ts;
       const t = (ts - t0) / 1000;
       const w = cv.clientWidth || 300;
-      const h = cv.clientHeight || 230;
+      const h = cv.clientHeight || 240;
       ctx.clearRect(0, 0, w, h);
       cfg.draw(ctx, w, h, t);
       raf = requestAnimationFrame(loop);
@@ -1051,97 +537,50 @@ function init3DCharts() {
   });
 }
 
-/* ── 3D BAR CHART ── */
-function draw3DBars(ctx, w, h, t) {
-  const cam = chartCam();
-  const data = [
-    { v: 0.3, l: 'M1', c: '#6ea8ff' },
-    { v: 0.63, l: 'M2', c: '#59d8ff' },
-    { v: 1.05, l: 'M3', c: '#8b7cf6' },
-    { v: 1.44, l: 'M4', c: '#00e5a0' },
-    { v: 2.1, l: 'M5', c: '#6ea8ff' },
-    { v: 2.37, l: 'M6', c: '#ffb454' },
-  ];
-  const maxV = 2.37;
-  const ox = w / 2, oy = h - 26;
-  const barW = 30, barD = 30, step = 52;
-  const x0 = -((data.length - 1) * step) / 2;
-
-  const gA = camProject([-160, 0, 40], cam, ox, oy);
-  const gB = camProject([160, 0, -40], cam, ox, oy);
-  ctx.beginPath();
-  ctx.moveTo(gA[0], gA[1]);
-  ctx.lineTo(gB[0], gB[1]);
-  ctx.strokeStyle = 'rgba(110,168,255,.35)';
-  ctx.lineWidth = 1.5;
-  ctx.stroke();
-
-  data.forEach((d, i) => {
-    const delay = 0.12 + i * 0.1;
-    const p = easeOut(Math.min(Math.max((t - delay) / 0.75, 0), 1));
-    const hgt = (d.v / maxV) * 135 * p;
-    const cx = x0 + i * step;
-    const faces = boxFaces(cx, 0, 0, barW, hgt, barD, d.c, cam, ox, oy);
-    fillFaces(ctx, faces);
-    const lb = camProject([cx, -6, 0], cam, ox, oy);
-    ctx.font = '600 10px Poppins, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#777';
-    ctx.fillText(d.l, lb[0], lb[1] + 14);
-    if (p > 0.55) {
-      const top = camProject([cx, hgt + 8, 0], cam, ox, oy);
-      ctx.font = '700 11px Poppins, sans-serif';
-      ctx.fillStyle = i === data.length - 1 ? '#ffb454' : '#aaa6c3';
-      ctx.fillText(i === data.length - 1 ? d.v + 'Cr' : d.v.toFixed(1), top[0], top[1] - 6);
-    }
-  });
-}
-
-/* ── 3D FUNNEL ── */
+/* ── 3D FUNNEL (calm grey + accent) ── */
 function draw3DFunnel(ctx, w, h, t) {
   const cam = chartCam();
   const levels = [
-    { wd: 240, label: '3,589 raw', pct: '66%', c: '#6ea8ff' },
-    { wd: 190, label: '2,386 unique', pct: '3.6%', c: '#8b7cf6' },
-    { wd: 140, label: '87 analysed', pct: '36%', c: '#00e5a0' },
-    { wd: 92, label: '31 leads · 12 biddable', pct: '39%', c: '#ff6b9d' },
-    { wd: 62, label: '2 deals ✓', pct: '17%', c: '#ffb454' },
+    { wd: 240, label: '3,589 raw', pct: '66%', c: '#3a4048' },
+    { wd: 190, label: '2,386 unique', pct: '3.6%', c: '#454c56' },
+    { wd: 140, label: '87 analysed', pct: '36%', c: '#525a66' },
+    { wd: 92, label: '31 leads · 12 biddable', pct: '39%', c: '#6d756d' },
+    { wd: 62, label: '2 deals ✓', pct: '17%', c: '#c6f04e' },
   ];
-  const ox = w / 2, oy = h - 20;
+  const ox = w / 2, oy = h - 24; // baseline: bottom level rests on oy; levels stack UPWARD (−y)
   const lh = 38, gap = 4;
-  let cy = 0;
 
   for (let i = levels.length - 1; i >= 0; i--) {
     const lv = levels[i];
     const delay = 0.25 + (levels.length - 1 - i) * 0.18;
     const p = easeOut(Math.min(Math.max((t - delay) / 0.5, 0), 1));
-    const drop = (1 - p) * -26;
-    const cyb = cy + lh;
+    const drop = (1 - p) * 30; // start below the baseline, rise into place
+    const cyb = -((levels.length - 1 - i) * (lh + gap) + lh);
     const d = lv.wd * 0.42;
     const faces = boxFaces(0, cyb + drop, 0, lv.wd, lh, d, lv.c, cam, ox, oy);
     fillFaces(ctx, faces);
     if (p > 0.5) {
       const lp = camProject([0, cyb - lh / 2 + drop, d / 2 + 1], cam, ox, oy);
-      ctx.font = '700 10px Poppins, sans-serif';
+      ctx.font = '600 10px "Space Grotesk", sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillStyle = '#fff';
+      ctx.fillStyle = i === levels.length - 1 ? '#0a0b0d' : '#f2f4ef';
       ctx.fillText(lv.label, lp[0], lp[1] + 3);
       const pp = camProject([lv.wd / 2 + 26, cyb - lh / 2 + drop, 0], cam, ox, oy);
-      ctx.font = '600 9px Poppins, sans-serif';
-      ctx.fillStyle = '#aaa6c3';
+      ctx.font = '500 9px Inter, sans-serif';
+      ctx.fillStyle = '#9aa39a';
       ctx.fillText(lv.pct, pp[0], pp[1] + 3);
     }
-    cy += lh + gap;
   }
 }
 
-/* ── 3D LINE CHART ── */
+/* ── 3D LINE (accent stroke) ── */
 function draw3DLine(ctx, w, h, t) {
   const cam = chartCam();
   const pts = [165, 130, 108, 85, 55];
-  const ox = w / 2, oy = h - 24;
+  const ox = w / 2, oy = h - 30;
   const minV = 55, maxV = 165;
-  const worldPts = pts.map((v, i) => [-132 + i * 66, ((v - minV) / (maxV - minV)) * 132, 0]);
+  // analysis time falls over the week: 165min (top) → 55min (bottom)
+  const worldPts = pts.map((v, i) => [-132 + i * 66, -((v - minV) / (maxV - minV)) * 132, 0]);
 
   for (let gx = -132; gx <= 132; gx += 66) {
     const a = camProject([gx, 0, -36], cam, ox, oy);
@@ -1149,7 +588,7 @@ function draw3DLine(ctx, w, h, t) {
     ctx.beginPath();
     ctx.moveTo(a[0], a[1]);
     ctx.lineTo(b[0], b[1]);
-    ctx.strokeStyle = 'rgba(255,255,255,.06)';
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
     ctx.stroke();
   }
   const fA = camProject([-132, 0, 0], cam, ox, oy);
@@ -1157,7 +596,7 @@ function draw3DLine(ctx, w, h, t) {
   ctx.beginPath();
   ctx.moveTo(fA[0], fA[1]);
   ctx.lineTo(fB[0], fB[1]);
-  ctx.strokeStyle = 'rgba(110,168,255,.3)';
+  ctx.strokeStyle = 'rgba(198,240,78,0.25)';
   ctx.stroke();
 
   const p = easeOut(Math.min(t / 1.7, 1));
@@ -1177,10 +616,10 @@ function draw3DLine(ctx, w, h, t) {
     ctx.beginPath();
     ctx.moveTo(a[0], a[1]);
     ctx.lineTo(mx, my);
-    ctx.strokeStyle = '#59d8ff';
-    ctx.lineWidth = 4;
-    ctx.shadowColor = 'rgba(89,216,255,.8)';
-    ctx.shadowBlur = 10;
+    ctx.strokeStyle = '#c6f04e';
+    ctx.lineWidth = 3;
+    ctx.shadowColor = 'rgba(198,240,78,0.6)';
+    ctx.shadowBlur = 8;
     ctx.stroke();
   }
   ctx.restore();
@@ -1189,9 +628,9 @@ function draw3DLine(ctx, w, h, t) {
     const dotP = Math.min(Math.max((drawn - i + 0.4) / 0.6, 0), 1);
     if (dotP <= 0) return;
     const dp = camProject(wp, cam, ox, oy);
-    const r = 6 * dotP;
+    const r = 5.5 * dotP;
     const grad = ctx.createRadialGradient(dp[0], dp[1], 0, dp[0], dp[1], r * 2.6);
-    const col = i === 0 ? '#ff6b9d' : i === worldPts.length - 1 ? '#00e5a0' : '#8b7cf6';
+    const col = i === 0 ? '#9aa39a' : i === worldPts.length - 1 ? '#c6f04e' : '#6d756d';
     grad.addColorStop(0, '#fff');
     grad.addColorStop(0.35, col);
     grad.addColorStop(1, 'rgba(0,0,0,0)');
@@ -1200,167 +639,133 @@ function draw3DLine(ctx, w, h, t) {
     ctx.fillStyle = grad;
     ctx.fill();
     if (i === 0) {
-      ctx.font = '700 10px Poppins, sans-serif';
+      ctx.font = '600 10px "Space Grotesk", sans-serif';
       ctx.textAlign = 'left';
-      ctx.fillStyle = '#ff6b9d';
+      ctx.fillStyle = '#9aa39a';
       ctx.fillText('165min', dp[0] + 10, dp[1] - 8);
-      ctx.font = '600 9px Poppins, sans-serif';
-      ctx.fillStyle = '#777';
+      ctx.font = '500 9px Inter, sans-serif';
+      ctx.fillStyle = '#6d756d';
       ctx.fillText('Day 1', dp[0] + 10, dp[1] + 16);
     } else if (i === worldPts.length - 1) {
-      ctx.font = '700 10px Poppins, sans-serif';
+      ctx.font = '600 10px "Space Grotesk", sans-serif';
       ctx.textAlign = 'right';
-      ctx.fillStyle = '#00e5a0';
+      ctx.fillStyle = '#c6f04e';
       ctx.fillText('55min', dp[0] - 10, dp[1] - 8);
-      ctx.font = '600 9px Poppins, sans-serif';
-      ctx.fillStyle = '#777';
+      ctx.font = '500 9px Inter, sans-serif';
+      ctx.fillStyle = '#6d756d';
       ctx.fillText('Day 5', dp[0] - 10, dp[1] + 16);
     }
   });
 
   if (p > 0.85) {
-    const lp = camProject([0, 40, 60], cam, ox, oy);
-    ctx.font = '800 14px Poppins, sans-serif';
+    const lp = camProject([0, -86, 60], cam, ox, oy);
+    ctx.font = '700 14px "Space Grotesk", sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillStyle = '#8b7cf6';
+    ctx.fillStyle = '#c6f04e';
     ctx.fillText('−67% in 5 days', lp[0], lp[1]);
   }
 }
 
-/* ────────────────────────────── FOLDER TREE (repo archive) ────────────────────────────── */
-function initFolderTree() {
-  const repoBody = document.getElementById('repoBody');
-  if (!repoBody) return;
-  const folders = [
-    { name: 'research_analysis/', icon: '🗄️', color: '#59d8ff', desc: '22 workbooks — Liverpool, E1, Grays, matched, 42-candidate shortlist', items: ['01–07 core workbooks', '20_Liverpool_10_Mile_Matched_Properties.xlsx', '21_BRRR_BMV_42_Candidates_Positive_Lead.xlsx', '22_Liverpool_Wirral_Deep_Analysis_Final.xlsx'] },
-    { name: 'case_studies/', icon: '🏠', color: '#8b7cf6', desc: '19 files — 8 properties: checklist + max offer + legal review', items: ['08–11 core deep-dives', '12_Sulby_Avenue', '13_Greenwood_House', '14_Rufford_Road', '15_Exeter_Road', '16_Sandy_Grove', '17_Marlborough', '18_Solicitor_Review_Argent', '19_Parsonage_Deep_Drive'] },
-    { name: 'prompt_library/', icon: '🤖', color: '#00e5a0', desc: 'Reusable prompts & agent workflows + master prompts', items: ['property_research/', 'content_production/', 'agent_operations/', 'admin_workflow/', 'Elite_Acquisition_Master_Prompt.md'] },
-    { name: 'ai/', icon: '⚙️', color: '#6ea8ff', desc: 'Agent stack + real automation scripts (Chrome CDP scraper, pipeline, rank, audit)', items: ['agent_stack_workflows.md', 'scripts/rightmove_scraper.py', 'scripts/property_pipeline.py', 'scripts/audit_engine.py', 'scripts/OPERATING_MANUAL.md'] },
-    { name: 'client_work/', icon: '🤝', color: '#ff6b9d', desc: 'B2B LinkedIn content delivered for client (Ruhrose)', items: ['ruhrose_linkedin/ — briefing, content plan, 5 post series'] },
-    { name: 'daily_reports/', icon: '📆', color: '#ffb454', desc: 'Daily research workflow outputs', items: ['Active_Property_Screening_15062026.xlsx', 'BRRR_Analysis_Max_Offer_21072026.xlsx', 'Cross_Checked_Costs_Verified.xlsx'] },
-    { name: 'content_samples/', icon: '✍️', color: '#ff6b9d', desc: 'LinkedIn posts, campaigns, personas', items: ['B2B apparel series/', 'personas/', 'voice-guide/'] },
-    { name: 'cv/', icon: '📄', color: '#ffb454', desc: 'Property Consultant CV', items: ['Fayzur_Rahman_Property_Consultant_CV.docx'] },
+/* ────────────────────────────── FAYZUR AI (local knowledge engine) ────────────────────────────── */
+function initAI() {
+  const log = document.getElementById('chatLog');
+  const form = document.getElementById('chatForm');
+  const input = document.getElementById('chatInput');
+  const suggests = document.getElementById('chatSuggests');
+  if (!log || !form || !input) return;
+
+  /* Structured portfolio knowledge — the only source the assistant answers from. */
+  const KB = [
+    {
+      k: ['do', 'specialise', 'specialize', 'who', 'about', 'position', 'work'],
+      a: 'Fayzur works at the intersection of PROPERTY × AI × DATA × RESEARCH × SALES — UK property sourcing and analysis, AI-assisted research automation, and 11+ years of commercial sales. Headline: "I turn property data into better decisions."',
+    },
+    {
+      k: ['property', 'research', 'screen', 'brrr', 'bmv', 'auction'],
+      a: '3,589+ properties screened across PropertyData exports, Rightmove and auction portals → 2,386 unique postcodes → 350 auction lots analysed → 2 deals completed. Focus areas: Liverpool & Wirral (79 towns), London E1 (53 properties), Grays/Chafford Hundred (freehold focus).',
+    },
+    {
+      k: ['ai', 'tool', 'automation', 'llm', 'agent', 'n8n', 'api', 'excel'],
+      a: 'AI-assisted research, workflow automation, LLMs, OpenClaw, AutoClaw, Hermes agents, n8n, APIs, Excel and data analysis — used to run a screening pipeline that cut time per property from 165min to 55min (−67%).',
+    },
+    {
+      k: ['career', 'timeline', 'job', 'experience', 'history', 'companies'],
+      a: 'BNMKS — Territory Sales Officer (2016–18) → Jadroo — Business Development Executive (2019–20) → Samsung — Experience Consultant, BDT 12.78Cr sales (2021–23) → Asian Paints — APEC Consultant (2023–24) → Isho Furniture — Assistant Manager, BDT 2.37Cr sales (2024–26) → BricksBuilder — Operations & Research Lead to MD (2026–present).',
+    },
+    {
+      k: ['sales', 'achievement', 'result', 'track', 'samsung', 'isho'],
+      a: 'Verified results: BDT 12.78Cr Samsung electronics sales over 3 years; BDT 2.37Cr Isho Furniture showroom sales (454 orders, 20 months); 3,589+ properties screened; 2 property deals completed.',
+    },
+    {
+      k: ['contact', 'email', 'phone', 'reach', 'linkedin'],
+      a: 'Email sense060994@gmail.com · Phone +880 1795-913204 · LinkedIn /in/fayzur0609 · GitHub fayzur060994.',
+    },
+    {
+      k: ['skill', 'good at', 'strength', 'expertise'],
+      a: 'Property research and due diligence · AI-assisted workflow automation · sales, negotiation and high-value closing · operations and reporting · Excel and data analysis.',
+    },
+    {
+      k: ['hire', 'why', 'value', 'work with'],
+      a: 'A commercially experienced operator who uses AI to move faster: 11+ years of sales, a verified BDT 15Cr+ track record, deep UK property research capability and an automation-first workflow.',
+    },
   ];
-  folders.forEach((folder) => {
-    const row = document.createElement('div');
-    row.className = 'folder-row';
-    row.setAttribute('tabindex', '0');
-    row.setAttribute('role', 'button');
-    row.setAttribute('aria-expanded', 'false');
-    row.innerHTML =
-      '<span class="folder-chevron">▶</span>' +
-      '<span class="folder-icon">' + folder.icon + '</span>' +
-      '<span class="folder-name" style="color:' + folder.color + '">' + folder.name + '</span>' +
-      '<span class="folder-desc">' + folder.desc + '</span>';
-    const children = document.createElement('div');
-    children.className = 'folder-children';
-    folder.items.forEach((item) => {
-      const child = document.createElement('div');
-      child.className = 'folder-child';
-      child.innerHTML = '<span style="color:' + folder.color + '">└─</span> ' + item;
-      children.appendChild(child);
+
+  function answer(q) {
+    const ql = q.toLowerCase();
+    let best = null, bestScore = 0;
+    KB.forEach((entry) => {
+      const score = entry.k.reduce((s, kw) => s + (ql.includes(kw) ? 1 : 0), 0);
+      if (score > bestScore) { best = entry; bestScore = score; }
     });
-    const toggle = () => {
-      const wasOpen = children.classList.contains('open');
-      document.querySelectorAll('.folder-children.open').forEach((c) => c.classList.remove('open'));
-      document.querySelectorAll('.folder-chevron.open').forEach((c) => c.classList.remove('open'));
-      document.querySelectorAll('.folder-row[aria-expanded="true"]').forEach((r) => r.setAttribute('aria-expanded', 'false'));
-      if (!wasOpen) {
-        children.classList.add('open');
-        row.querySelector('.folder-chevron').classList.add('open');
-        row.setAttribute('aria-expanded', 'true');
+    return best
+      ? best.a
+      : "I don't have that information in Fayzur's portfolio yet. Try one of the suggested questions — property, AI tools, career or sales.";
+  }
+
+  function addMsg(text, who) {
+    const row = document.createElement('div');
+    row.className = 'chat-msg ' + who;
+    row.innerHTML = '<span class="chat-avatar">' + (who === 'bot' ? 'F' : 'You') + '</span><div class="chat-bubble"></div>';
+    row.querySelector('.chat-bubble').textContent = text;
+    log.appendChild(row);
+    log.scrollTop = log.scrollHeight;
+    return row;
+  }
+
+  function ask(q) {
+    if (!q.trim()) return;
+    addMsg(q, 'user');
+    input.value = '';
+    const typing = addMsg('', 'bot');
+    typing.classList.add('typing');
+    const t0 = performance.now();
+    const tick = (now) => {
+      if ((now - t0) / 620 < 1) requestAnimationFrame(tick);
+      else {
+        typing.classList.remove('typing');
+        typing.querySelector('.chat-bubble').textContent = answer(q);
+        log.scrollTop = log.scrollHeight;
       }
     };
-    row.addEventListener('click', toggle);
-    row.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
-    });
-    repoBody.appendChild(row);
-    repoBody.appendChild(children);
+    requestAnimationFrame(tick);
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    ask(input.value);
+  });
+  suggests.addEventListener('click', (e) => {
+    if (e.target.classList.contains('chat-chip')) ask(e.target.textContent);
   });
 }
 
 /* ────────────────────────────── BOOT ────────────────────────────── */
-initLoader();
-initCursor();
 initNav();
 initScrollChrome();
 initStats();
 initReveal();
-initParallax();
 initMagnetic();
-initCommand();
+initPortraitParallax();
 initMap();
-initInvFlow();
-initAI();
-initJourney();
-initAboutTiles();
-initFolderTree();
 init3DCharts();
-
-/* AI + skill node graphs */
-const AI_GRAPH = {
-  hubs: [
-    { x: 0.5, y: 0.14, r: 19, label: 'LLM', desc: 'Language models powering research and content', leaves: [
-      { label: 'OpenClaw', desc: 'Agent platform' },
-      { label: 'AutoClaw', desc: 'Desktop agent runtime' },
-      { label: 'Hermes Agent', desc: 'Self-improving agent' },
-    ] },
-    { x: 0.8, y: 0.34, r: 17, label: 'AGENTS', desc: 'Autonomous research and content agents', leaves: [
-      { label: 'Research agents', desc: 'Screening pipelines' },
-      { label: 'Content agents', desc: 'LinkedIn B2B series' },
-      { label: 'B2B personas', desc: 'Client voice tuning' },
-    ] },
-    { x: 0.72, y: 0.82, r: 17, label: 'AUTOMATION', desc: 'Workflow automation that removes manual loops', leaves: [
-      { label: 'Chrome CDP', desc: 'Bot-block bypass scraping' },
-      { label: 'Prompt pipeline', desc: 'Reusable prompt library' },
-      { label: 'Audit engine', desc: 'Cost-line verification' },
-    ] },
-    { x: 0.2, y: 0.76, r: 17, label: 'DATA', desc: 'Research and analytics backbone', leaves: [
-      { label: 'PropertyData', desc: 'Listings exports' },
-      { label: 'Excel models', desc: 'BRRR workbooks' },
-      { label: 'Analytics', desc: 'Funnel and metrics' },
-    ] },
-    { x: 0.24, y: 0.26, r: 18, label: 'PROPERTY', desc: 'The domain — BRRR, BMV, auctions', leaves: [
-      { label: 'BRRR', desc: 'Buy-Refurb-Rent-Refinance' },
-      { label: 'BMV', desc: 'Below-market-value' },
-      { label: 'Auction DD', desc: 'Legal pack review' },
-    ] },
-  ],
-  hubLinks: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 0], [0, 2], [1, 4]],
-};
-
-const SKILL_GRAPH = {
-  hubs: [
-    { x: 0.22, y: 0.24, r: 19, label: 'PROPERTY', desc: 'Investment research and sourcing', leaves: [
-      { label: 'BRRR', desc: 'Buy-Refurb-Rent-Refinance' },
-      { label: 'BMV', desc: 'Below-market-value deals' },
-      { label: 'Sourcing', desc: 'Rightmove + auction portals' },
-      { label: 'Auction DD', desc: 'Legal pack analysis' },
-      { label: 'Due Diligence', desc: 'EWS1 · SDLT · tenure' },
-      { label: 'Refurb Analysis', desc: 'Cost-tier verification' },
-    ] },
-    { x: 0.8, y: 0.3, r: 16, label: 'DATA', desc: 'Research and analytics', leaves: [
-      { label: 'Excel', desc: 'Financial modelling' },
-      { label: 'Research', desc: 'PropertyData exports' },
-      { label: 'Analytics', desc: 'Funnel and metrics' },
-      { label: 'Reporting', desc: 'Daily workbooks' },
-    ] },
-    { x: 0.74, y: 0.78, r: 17, label: 'AI', desc: 'Automation and agents', leaves: [
-      { label: 'LLMs', desc: 'OpenClaw · AutoClaw · Hermes' },
-      { label: 'AI Agents', desc: 'Research + content agents' },
-      { label: 'Automation', desc: 'Chrome CDP pipeline' },
-      { label: 'Workflow Design', desc: 'Prompt library systems' },
-    ] },
-    { x: 0.24, y: 0.8, r: 17, label: 'COMMERCIAL', desc: 'Sales and business development', leaves: [
-      { label: 'Sales', desc: 'BDT 15Cr+ combined' },
-      { label: 'Negotiation', desc: 'High-ticket closing' },
-      { label: 'Business Dev', desc: 'Partner + dealer networks' },
-      { label: 'Account Mgmt', desc: 'CRM and retention' },
-    ] },
-  ],
-  hubLinks: [[0, 1], [1, 2], [2, 3], [3, 0], [0, 2], [1, 3]],
-};
-
-initNodeGraph('aiNetwork', 'netFallback', AI_GRAPH, {});
-initNodeGraph('skillNet', 'skillFallback', SKILL_GRAPH, {});
+initAI();
